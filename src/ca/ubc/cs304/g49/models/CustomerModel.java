@@ -30,7 +30,7 @@ public class CustomerModel {
 
   public void readDlicense(BufferedReader reader) {
     while (true) {
-      System.out.println("Enter customer's driver's license number: ");
+      System.out.print("Enter customer's driver's license number: ");
       Optional<String> dLicenseOptional =
           Util.readString(reader, FieldSizes.MAXIMUM_DLICENSE_SIZE, false);
       if (dLicenseOptional.isPresent()) {

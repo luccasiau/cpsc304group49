@@ -24,6 +24,18 @@ public class DatabaseConnectionHandler {
     }
   }
 
+  public Connection getConnection() {
+    return connection;
+  }
+
+  public void rollbackConnection() {
+    try {
+      connection.rollback();
+    } catch (SQLException e) {
+      Util.printException(e.getMessage());
+    }
+  }
+
   public void close() {
     try {
       if (connection != null) {
@@ -49,17 +61,5 @@ public class DatabaseConnectionHandler {
       Util.printException(e.getMessage());
       return false;
     }
-  }
-
-  private void rollbackConnection() {
-    try {
-      connection.rollback();
-    } catch (SQLException e) {
-      Util.printException(e.getMessage());
-    }
-  }
-
-  public Connection getConnection() {
-    return connection;
   }
 }

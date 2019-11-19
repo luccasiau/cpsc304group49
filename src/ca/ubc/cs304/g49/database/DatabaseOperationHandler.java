@@ -2,9 +2,11 @@ package ca.ubc.cs304.g49.database;
 
 import ca.ubc.cs304.g49.delegates.CommandLineUiDelegate;
 import ca.ubc.cs304.g49.models.CustomerModel;
+import ca.ubc.cs304.g49.util.Util;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 
 public class DatabaseOperationHandler implements CommandLineUiDelegate {
   private DatabaseConnectionHandler dbConnectionHandler;
@@ -15,22 +17,31 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
 
   @Override
   public boolean makeNewCustomer(CustomerModel model) {
-    // TODO: Actually add this to table.
-    System.out.println("New customer info received");
-    System.out.println("Name: " + model.getName());
-    System.out.println("Address: " + model.getAddress());
-    System.out.println("Cell phone number: " + model.getCellNum());
-    System.out.println("Driver's license: " + model.getDlicense());
-
-    /*
     try {
-      // TODO FINISH
       PreparedStatement ps = dbConnectionHandler.getConnection()
-          .prepareStatement("INSERT INTO Customers VALUES (?, ?, ?, ?, ?)");
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }*/
+          .prepareStatement("INSERT INTO customer VALUES (?, ?, ?, ?)");
+      ps.setString(1, model.getDlicense());
+      ps.setString(2, model.getName());
+      if (model.getCellNum() == 0) {
+        ps.setNull(3, Types.INTEGER);
+      } else {
+        ps.setLong(3, model.getCellNum());
+      }
+      if (model.getAddress().length() == 0) {
+        ps.setNull(4, Types.VARCHAR);
+      } else {
+        ps.setString(4, model.getAddress());
+      }
 
-    return false;
+      ps.executeUpdate();
+      dbConnectionHandler.getConnection().commit();
+      ps.close();
+    } catch (SQLException e) {
+      dbConnectionHandler.rollbackConnection();
+      Util.printException(e.getMessage());
+      return false;
+    }
+
+    return true;
   }
 }

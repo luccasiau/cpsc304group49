@@ -13,7 +13,7 @@ public class Controller {
 
   public Controller() {
     dbConnectionHandler = new DatabaseConnectionHandler();
-    dbOperationHandler = new DatabaseOperationHandler();
+    dbOperationHandler = new DatabaseOperationHandler(dbConnectionHandler);
   }
 
   public void run() {
