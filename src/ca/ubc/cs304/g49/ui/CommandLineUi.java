@@ -42,10 +42,6 @@ public class CommandLineUi {
       String password = Util.readString(bufferedReader, 255).orElse("");
 
       loggedIn = dbHandler.login(username, password);
-      if (!loggedIn) {
-        Util.printWarning("Invalid username/password.");
-      }
-      System.out.println("");
     }
   }
 
@@ -134,7 +130,7 @@ public class CommandLineUi {
     if (delegate.makeNewCustomer(dLicense, cellNum, name, address)) {
       System.out.println("Customer successfully registered.");
     } else {
-      Util.makeWarning("Customer registration failed.");
+      Util.printWarning("Customer registration failed.");
     }
   }
 
