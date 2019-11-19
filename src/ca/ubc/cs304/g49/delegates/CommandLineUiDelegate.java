@@ -8,5 +8,5 @@ import ca.ubc.cs304.g49.models.CustomerModel;
  */
 public interface CommandLineUiDelegate {
   // TODO: Add functions here as needed.
-  boolean makeNewCustomer(CustomerModel customerModel);
+  boolean insertCustomer(CustomerModel customerModel);
 }

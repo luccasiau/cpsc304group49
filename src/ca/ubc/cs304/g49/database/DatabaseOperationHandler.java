@@ -16,7 +16,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
   }
 
   @Override
-  public boolean makeNewCustomer(CustomerModel model) {
+  public boolean insertCustomer(CustomerModel model) {
     try {
       PreparedStatement ps = dbConnectionHandler.getConnection()
           .prepareStatement("INSERT INTO customer VALUES (?, ?, ?, ?)");

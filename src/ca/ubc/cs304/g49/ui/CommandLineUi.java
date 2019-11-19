@@ -3,7 +3,6 @@ package ca.ubc.cs304.g49.ui;
 import ca.ubc.cs304.g49.database.DatabaseConnectionHandler;
 import ca.ubc.cs304.g49.delegates.CommandLineUiDelegate;
 import ca.ubc.cs304.g49.models.CustomerModel;
-import ca.ubc.cs304.g49.util.FieldSizes;
 import ca.ubc.cs304.g49.util.Util;
 
 import java.io.BufferedReader;
@@ -90,7 +89,7 @@ public class CommandLineUi {
     customerModel.readCellNum(bufferedReader);
     customerModel.readAddress(bufferedReader);
 
-    if (delegate.makeNewCustomer(customerModel)) {
+    if (delegate.insertCustomer(customerModel)) {
       System.out.println("Customer successfully registered.");
     } else {
       Util.printWarning("Customer registration failed.");
