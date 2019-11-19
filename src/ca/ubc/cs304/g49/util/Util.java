@@ -15,13 +15,46 @@ public class Util {
       line = reader.readLine();
       ret = Optional.of(Integer.parseInt(line));
     } catch (IOException e) {
-      System.out.println(String.format("%s %s", EXCEPTION_TAG, e.getMessage()));
+      printException(e.getMessage());
     } catch (NumberFormatException e) {
       if (allowEmpty && line.length() == 0) ret = Optional.of(0);
-      else System.out.println(Util.WARNING_TAG + " Input not integer.");
+      else printException(e.getMessage());
     }
 
     return ret;
+  }
+
+  public static Optional<Long> readLong(BufferedReader reader, boolean allowEmpty) {
+    String line = null;
+    Optional<Long> ret = Optional.empty();
+    try {
+      line = reader.readLine();
+      ret = Optional.of(Long.parseLong(line));
+    } catch (IOException e) {
+      printException(e.getMessage());
+    } catch (NumberFormatException e) {
+      if (allowEmpty && line.length() == 0) ret = Optional.of(0L);
+      else printException(e.getMessage());
+    }
+
+    return ret;
+  }
+
+  public static Optional<String> readString(BufferedReader reader, int maxSize) {
+    String line = null;
+
+    try {
+      line = reader.readLine();
+    } catch (IOException e) {
+      printException(e.getMessage());
+    }
+
+    if (line.length() > maxSize) {
+      makeWarning(String.format("Maximum allowed size is %d", maxSize));
+      return Optional.empty();
+    }
+
+    return Optional.of(line);
   }
 
   public static String makeWarning(String message) {

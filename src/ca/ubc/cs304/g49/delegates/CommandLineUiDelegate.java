@@ -6,4 +6,5 @@ package ca.ubc.cs304.g49.delegates;
  */
 public interface CommandLineUiDelegate {
   // TODO: Add functions here as needed.
+  boolean makeNewCustomer(String dlicense, Long cellNum, String name, String address);
 }
