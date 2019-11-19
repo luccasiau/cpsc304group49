@@ -40,7 +40,7 @@ public class Util {
     return ret;
   }
 
-  public static Optional<String> readString(BufferedReader reader, int maxSize) {
+  public static Optional<String> readString(BufferedReader reader, int maxSize, boolean allowEmpty) {
     String line = null;
 
     try {
@@ -50,7 +50,11 @@ public class Util {
     }
 
     if (line.length() > maxSize) {
-      makeWarning(String.format("Maximum allowed size is %d", maxSize));
+      printWarning(String.format("Maximum allowed size is %d", maxSize));
+      return Optional.empty();
+    }
+    if (line.length() == 0 && !allowEmpty) {
+      printWarning("Field cannot be empty.");
       return Optional.empty();
     }
 

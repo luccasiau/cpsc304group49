@@ -2,6 +2,7 @@ package ca.ubc.cs304.g49.ui;
 
 import ca.ubc.cs304.g49.database.DatabaseConnectionHandler;
 import ca.ubc.cs304.g49.delegates.CommandLineUiDelegate;
+import ca.ubc.cs304.g49.models.CustomerModel;
 import ca.ubc.cs304.g49.util.FieldSizes;
 import ca.ubc.cs304.g49.util.Util;
 
@@ -36,10 +37,10 @@ public class CommandLineUi {
     boolean loggedIn = false;
     while (!loggedIn) {
       System.out.print("Enter username: ");
-      String username = Util.readString(bufferedReader, 255).orElse("");
+      String username = Util.readString(bufferedReader, 255, true).orElse("");
 
       System.out.print("Enter password: ");
-      String password = Util.readString(bufferedReader, 255).orElse("");
+      String password = Util.readString(bufferedReader, 255, true).orElse("");
 
       loggedIn = dbHandler.login(username, password);
     }
@@ -83,51 +84,13 @@ public class CommandLineUi {
   }
 
   private void handleNewCustomer() {
-    String dLicense;
-    while (true) {
-      System.out.print("Enter customer's driver's license number: ");
-      Optional<String> dLicenseOptional =
-          Util.readString(bufferedReader, FieldSizes.MAXIMUM_DLICENSE_SIZE);
-      if (dLicenseOptional.isPresent()) {
-        dLicense = dLicenseOptional.get();
-        break;
-      }
-    }
+    CustomerModel customerModel = new CustomerModel();
+    customerModel.readDlicense(bufferedReader);
+    customerModel.readName(bufferedReader);
+    customerModel.readCellNum(bufferedReader);
+    customerModel.readAddress(bufferedReader);
 
-    Long cellNum;
-    while (true) {
-      System.out.print("Enter customer's cell phone number: ");
-      Optional<Long> cellNumOptional =
-          Util.readLong(bufferedReader, true);
-      if (cellNumOptional.isPresent()) {
-        cellNum = cellNumOptional.get();
-        break;
-      }
-    }
-
-    String name;
-    while (true) {
-      System.out.print("Enter customer's name: ");
-      Optional<String> nameOptional =
-          Util.readString(bufferedReader, FieldSizes.MAXIMUM_CUSTOMER_NAME_SIZE);
-      if (nameOptional.isPresent()) {
-        name = nameOptional.get();
-        break;
-      }
-    }
-
-    String address;
-    while (true) {
-      System.out.print("Enter customer's address: ");
-      Optional<String> addressOptional =
-          Util.readString(bufferedReader, FieldSizes.MAXIMUM_ADDRESS_SIZE);
-      if (addressOptional.isPresent()) {
-        address = addressOptional.get();
-        break;
-      }
-    }
-
-    if (delegate.makeNewCustomer(dLicense, cellNum, name, address)) {
+    if (delegate.makeNewCustomer(customerModel)) {
       System.out.println("Customer successfully registered.");
     } else {
       Util.printWarning("Customer registration failed.");

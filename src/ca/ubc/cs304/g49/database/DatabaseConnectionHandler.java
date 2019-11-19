@@ -43,7 +43,7 @@ public class DatabaseConnectionHandler {
       connection = DriverManager.getConnection(ORACLE_URL, username, password);
       connection.setAutoCommit(false);
 
-      System.out.println("\nConnected to Oracle!");
+      System.out.println("\nConnected to Oracle DB!");
       return true;
     } catch (SQLException e) {
       Util.printException(e.getMessage());
