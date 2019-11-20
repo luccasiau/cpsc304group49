@@ -84,10 +84,7 @@ public class CommandLineUi {
 
   private void handleNewCustomer() {
     CustomerModel customerModel = new CustomerModel();
-    customerModel.readDlicense(bufferedReader);
-    customerModel.readName(bufferedReader);
-    customerModel.readCellNum(bufferedReader);
-    customerModel.readAddress(bufferedReader);
+    customerModel.readCustomerInfo(bufferedReader);
 
     if (delegate.insertCustomer(customerModel)) {
       System.out.println("Customer successfully registered.");

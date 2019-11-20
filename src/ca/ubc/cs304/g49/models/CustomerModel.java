@@ -28,7 +28,14 @@ public class CustomerModel {
     return address;
   }
 
-  public void readDlicense(BufferedReader reader) {
+  public void readCustomerInfo(BufferedReader reader) {
+    readDlicense(reader);
+    readName(reader);
+    readCellNum(reader);
+    readAddress(reader);
+  }
+
+  private void readDlicense(BufferedReader reader) {
     while (true) {
       System.out.print("Enter customer's driver's license number: ");
       Optional<String> dLicenseOptional =
@@ -40,7 +47,7 @@ public class CustomerModel {
     }
   }
 
-  public void readName(BufferedReader reader) {
+  private void readName(BufferedReader reader) {
     while (true) {
       System.out.print("Enter customer's name: ");
       Optional<String> nameOptional =
@@ -52,7 +59,7 @@ public class CustomerModel {
     }
   }
 
-  public void readCellNum(BufferedReader reader) {
+  private void readCellNum(BufferedReader reader) {
     while (true) {
       System.out.print("Enter customer's cell phone number: ");
       Optional<Long> cellNumOptional =
@@ -64,7 +71,7 @@ public class CustomerModel {
     }
   }
 
-  public void readAddress(BufferedReader reader) {
+  private void readAddress(BufferedReader reader) {
     while (true) {
       System.out.print("Enter customer's address: ");
       Optional<String> addressOptional =
