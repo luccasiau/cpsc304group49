@@ -3,6 +3,7 @@ package ca.ubc.cs304.g49.ui;
 import ca.ubc.cs304.g49.database.DatabaseConnectionHandler;
 import ca.ubc.cs304.g49.delegates.CommandLineUiDelegate;
 import ca.ubc.cs304.g49.models.CustomerModel;
+import ca.ubc.cs304.g49.models.ReservationModel;
 import ca.ubc.cs304.g49.util.Util;
 
 import java.io.BufferedReader;
@@ -70,7 +71,7 @@ public class CommandLineUi {
       if (inputOptional.isPresent()) {
         switch (inputOptional.get()) {
           case 1:
-            handleNewCustomer();
+            handleNewCustomer(Optional.empty());
             break;
           case 2:
             handleQuit();
@@ -82,8 +83,43 @@ public class CommandLineUi {
     }
   }
 
-  private void handleNewCustomer() {
+  private void handleNewReservation() {
+    ReservationModel reservationModel = new ReservationModel();
+    reservationModel.readReservationInfo(bufferedReader);
+
+    while (!delegate.dlicenseExist(reservationModel.getDlicense())) {
+      System.out.println("This driver's license is not affiliated with any customer.");
+      int in = 3;
+      while (in != 1 && in != 2) {
+        System.out.print("Do you want to register a new customer [1] or enter a different license [2]? [1/2] ");
+        in = Util.readInteger(bufferedReader, false).orElse(3);
+      }
+
+      if (in == 2) {
+        reservationModel.readDlicense(bufferedReader);
+      } else {
+        handleNewCustomer(Optional.of(reservationModel.getDlicense()));
+      }
+    }
+
+    if (delegate.insertReservation(reservationModel)) {
+      System.out.println("Reservation successfully created!");
+      System.out.printf("Confirmation number: %s%n", reservationModel.getConfno());
+      System.out.printf(
+          "Customer's Driver's License: %s%n", reservationModel.getDlicense());
+      System.out.printf("Vehicle Type: %s%n", reservationModel.getVtname());
+      System.out.printf("Branch location: %s%n", reservationModel.getLocation());
+      System.out.printf("Branch city: %s%n", reservationModel.getCity());
+      System.out.printf("Start date: %s%n", reservationModel.getStartDate().toString());
+      System.out.printf("End date: %s%n", reservationModel.getEndDate().toString());
+    } else {
+      Util.printWarning("Reservation registration failed!");
+    }
+  }
+
+  private void handleNewCustomer(Optional<String> dlicenseOptional) {
     CustomerModel customerModel = new CustomerModel();
+    dlicenseOptional.ifPresent(customerModel::setDlicense);
     customerModel.readCustomerInfo(bufferedReader);
 
     if (delegate.insertCustomer(customerModel)) {

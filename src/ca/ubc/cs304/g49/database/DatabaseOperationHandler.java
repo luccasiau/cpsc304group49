@@ -2,6 +2,7 @@ package ca.ubc.cs304.g49.database;
 
 import ca.ubc.cs304.g49.delegates.CommandLineUiDelegate;
 import ca.ubc.cs304.g49.models.CustomerModel;
+import ca.ubc.cs304.g49.models.ReservationModel;
 import ca.ubc.cs304.g49.util.Util;
 
 import java.sql.PreparedStatement;
@@ -18,6 +19,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
   @Override
   public boolean insertCustomer(CustomerModel model) {
     try {
+      // FIXME: Is this safe to sql-injection?
       PreparedStatement ps = dbConnectionHandler.getConnection()
           .prepareStatement("INSERT INTO customer VALUES (?, ?, ?, ?)");
       ps.setString(1, model.getDlicense());
@@ -43,5 +45,15 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
     }
 
     return true;
+  }
+
+  @Override
+  public boolean insertReservation(ReservationModel reservationModel) {
+    return false;  // stub
+  }
+
+  @Override
+  public boolean dlicenseExist(String dlicense) {
+    return false;  // stub
   }
 }

@@ -28,35 +28,33 @@ public class CustomerModel {
     return address;
   }
 
+  public void setDlicense(String dlicense) {
+    this.dlicense = dlicense;
+  }
+
   public void readCustomerInfo(BufferedReader reader) {
-    readDlicense(reader);
+    if (dlicense != null) {
+      readDlicense(reader);
+    }
     readName(reader);
     readCellNum(reader);
     readAddress(reader);
   }
 
   private void readDlicense(BufferedReader reader) {
-    while (true) {
-      System.out.print("Enter customer's driver's license number: ");
-      Optional<String> dLicenseOptional =
-          Util.readString(reader, FieldSizes.MAXIMUM_DLICENSE_SIZE, false);
-      if (dLicenseOptional.isPresent()) {
-        dlicense = dLicenseOptional.get();
-        break;
-      }
-    }
+    dlicense = Util.genericStringRead(
+        reader,
+        "Enter customer's driver's license number: ",
+        FieldSizes.MAXIMUM_DLICENSE_SIZE,
+        false);
   }
 
   private void readName(BufferedReader reader) {
-    while (true) {
-      System.out.print("Enter customer's name: ");
-      Optional<String> nameOptional =
-          Util.readString(reader, FieldSizes.MAXIMUM_CUSTOMER_NAME_SIZE, false);
-      if (nameOptional.isPresent()) {
-        name = nameOptional.get();
-        break;
-      }
-    }
+    name = Util.genericStringRead(
+        reader,
+        "Enter customer's name: ",
+        FieldSizes.MAXIMUM_CUSTOMER_NAME_SIZE,
+        false);
   }
 
   private void readCellNum(BufferedReader reader) {
@@ -72,14 +70,10 @@ public class CustomerModel {
   }
 
   private void readAddress(BufferedReader reader) {
-    while (true) {
-      System.out.print("Enter customer's address: ");
-      Optional<String> addressOptional =
-          Util.readString(reader, FieldSizes.MAXIMUM_ADDRESS_SIZE, true);
-      if (addressOptional.isPresent()) {
-        address = addressOptional.get();
-        break;
-      }
-    }
+    address = Util.genericStringRead(
+        reader,
+        "Enter customer's address: ",
+        FieldSizes.MAXIMUM_ADDRESS_SIZE,
+        true);
   }
 }

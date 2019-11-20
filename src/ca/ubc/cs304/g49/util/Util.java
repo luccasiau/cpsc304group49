@@ -2,7 +2,9 @@ package ca.ubc.cs304.g49.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.sql.Date;
 import java.util.Optional;
+import java.util.Random;
 
 public class Util {
   private static final String EXCEPTION_TAG = "[EXCEPTION]";
@@ -71,5 +73,49 @@ public class Util {
 
   public static void printException(String message) {
     System.out.println(String.format("%s %s", EXCEPTION_TAG, message));
+  }
+
+  public static String genericStringRead(
+      BufferedReader reader, String message, int maxLength, boolean allowEmpty) {
+    while (true) {
+      System.out.print(message);
+      Optional<String> fieldOptional =
+          Util.readString(reader, maxLength, allowEmpty);
+      if (fieldOptional.isPresent()) {
+        return fieldOptional.get();
+      }
+    }
+  }
+
+  public static Date genericDateRead(
+      BufferedReader reader, String message, Date minDate) {
+    while (true) {
+      System.out.print(message);
+      try {
+        Date date = Date.valueOf(Util.readString(reader, 10, false).orElse(""));
+        if (date.compareTo(minDate) < 0) {
+          Util.printWarning("Date has to be at least " + minDate.toString());
+          continue;
+        }
+        return date;
+      } catch (IllegalArgumentException e) {
+        Util.printException(e.getMessage());
+      }
+    }
+  }
+
+  /**
+   * Generates a random alphanumerical (uppercase only) string with a certain length.
+   * @param length: length of final random string
+   */
+  public static String randomHash(int length) {
+    String alphanum = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    char[] buffer = new char[length];
+    Random random = new Random();
+
+    for (int i = 0; i < length; i++) {
+      buffer[i] = alphanum.charAt(random.nextInt(length));
+    }
+    return new String(buffer);
   }
 }
