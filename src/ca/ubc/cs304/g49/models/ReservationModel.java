@@ -86,7 +86,7 @@ public class ReservationModel {
 
   private void readCity(BufferedReader reader) {
     city = Util.genericStringRead(
-        reader, "Enter branch location: ", FieldSizes.MAXIMUM_CITY_SIZE, false);
+        reader, "Enter branch city: ", FieldSizes.MAXIMUM_CITY_SIZE, false);
   }
 
   private void readStartDate(BufferedReader reader) {

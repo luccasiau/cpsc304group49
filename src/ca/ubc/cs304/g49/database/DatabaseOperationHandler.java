@@ -6,6 +6,7 @@ import ca.ubc.cs304.g49.models.ReservationModel;
 import ca.ubc.cs304.g49.util.Util;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
@@ -54,6 +55,17 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
 
   @Override
   public boolean dlicenseExist(String dlicense) {
-    return false;  // stub
+    try {
+      PreparedStatement ps = dbConnectionHandler.getConnection()
+          .prepareStatement("SELECT * FROM customer WHERE dlicense = ?");
+      ps.setString(1, dlicense);
+
+      ResultSet rs = ps.executeQuery();
+      return rs.next();
+    } catch (SQLException e) {
+      dbConnectionHandler.rollbackConnection();
+      Util.printException(e.getMessage());
+      return false;
+    }
   }
 }

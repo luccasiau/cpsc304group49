@@ -14,7 +14,7 @@ import java.util.Optional;
  * Handles user interaction with CLI.
  */
 public class CommandLineUi {
-  private static final int QUIT_INPUT = 2;  // FIXME: Update this as needed.
+  private static final int QUIT_INPUT = 3;  // FIXME: Update this as needed.
 
   private CommandLineUiDelegate delegate;
   private BufferedReader bufferedReader = null;
@@ -61,7 +61,8 @@ public class CommandLineUi {
       // FIXME: The "create customer account shouldn't be in the main menu, but I'm
       // leaving it here because (1) it's simple and (2) it's needed.
       System.out.println("1. Create customer account.");
-      System.out.println("2. Quit.");
+      System.out.println("2. Make new reservation.");
+      System.out.println("3. Quit.");
       System.out.print("Please choose one of the above options: ");
 
       inputOptional = Util.readInteger(bufferedReader, false);
@@ -74,6 +75,9 @@ public class CommandLineUi {
             handleNewCustomer(Optional.empty());
             break;
           case 2:
+            handleNewReservation();
+            break;
+          case 3:
             handleQuit();
             break;
           default:
@@ -91,7 +95,7 @@ public class CommandLineUi {
       System.out.println("This driver's license is not affiliated with any customer.");
       int in = 3;
       while (in != 1 && in != 2) {
-        System.out.print("Do you want to register a new customer [1] or enter a different license [2]? [1/2] ");
+        System.out.print("Do you want to register a new customer [1] or enter a different license [2]? ");
         in = Util.readInteger(bufferedReader, false).orElse(3);
       }
 

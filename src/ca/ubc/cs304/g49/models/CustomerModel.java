@@ -33,7 +33,7 @@ public class CustomerModel {
   }
 
   public void readCustomerInfo(BufferedReader reader) {
-    if (dlicense != null) {
+    if (dlicense == null) {
       readDlicense(reader);
     }
     readName(reader);
