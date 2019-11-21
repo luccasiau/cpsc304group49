@@ -1,9 +1,9 @@
-DROP TABLE customer;
-DROP TABLE reservation;
-DROP TABLE vehicle;
-DROP TABLE vehicletype;
-DROP TABLE rent;
-DROP TABLE return;
+DROP TABLE customer CASCADE CONSTRAINTS;
+DROP TABLE reservation CASCADE CONSTRAINTS;
+DROP TABLE vehicle CASCADE CONSTRAINTS;
+DROP TABLE vehicletype CASCADE CONSTRAINTS;
+DROP TABLE rent CASCADE CONSTRAINTS;
+DROP TABLE return CASCADE CONSTRAINTS;
 
 CREATE TABLE customer (
   dlicense    VARCHAR(10) NOT NULL,
@@ -61,9 +61,9 @@ CREATE TABLE rent (
     cardname    VARCHAR(255)  NOT NULL,
     cardno      VARCHAR(16)   NOT NULL,
     expdate     INT           NOT NULL,
-    FOREIGN KEY vlicense REFERENCES vehicle,
-    FOREIGN KEY dlicense REFERENCES customer,
-    FOREIGN KEY confno   REFERENCES reservation,
+    FOREIGN KEY (vlicense) REFERENCES vehicle,
+    FOREIGN KEY (dlicense) REFERENCES customer,
+    FOREIGN KEY (confno)   REFERENCES reservation,
     PRIMARY KEY (rentid)
 );
 
@@ -71,8 +71,8 @@ CREATE TABLE return(
     rentid      VARCHAR(20)     NOT NULL,
     returnDate  DATE            NOT NULL,
     odomoter    INT             NOT NULL,
-    fullTalk    BOOLEAN         NOT NULL,
+    fullTalk    SMALLINT        NOT NULL,
     revenue     FLOAT           NOT NULL,
-    FOREIGN KEY rentid  REFERENCES rent,
+    FOREIGN KEY (rentid)  REFERENCES rent,
     PRIMARY KEY (rentid)
 );
