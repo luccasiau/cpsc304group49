@@ -1,3 +1,4 @@
+-- dropping everything
 DROP TABLE customer CASCADE CONSTRAINTS;
 DROP TABLE reservation CASCADE CONSTRAINTS;
 DROP TABLE vehicle CASCADE CONSTRAINTS;
@@ -5,6 +6,7 @@ DROP TABLE vehicletype CASCADE CONSTRAINTS;
 DROP TABLE rent CASCADE CONSTRAINTS;
 DROP TABLE return CASCADE CONSTRAINTS;
 
+-- recreating everything
 CREATE TABLE customer (
   dlicense    VARCHAR(10) NOT NULL,
   name        VARCHAR(255) NOT NULL,
@@ -30,7 +32,7 @@ CREATE TABLE vehicle (
     vlicense        VARCHAR(10) NOT NULL,
     vtname          VARCHAR(20) NOT NULL,
     odometer        INT,
-    status          CHAR(1),
+    status          VARCHAR(1)  NOT NULL,  -- [A]vailable;[R]ented;[M]aintenance
     colour          VARCHAR(20),
     location        VARCHAR(255) NOT NULL,
     city            VARCHAR(255) NOT NULL,
@@ -56,8 +58,8 @@ CREATE TABLE rent (
     vlicense    VARCHAR(10)   NOT NULL,
     dlicense    VARCHAR(10)   NOT NULL,
     confno      VARCHAR(20),
-    fromDate    DATE          NOT NULL,
-    toDate      DATE          NOT NULL,
+    startdate   DATE          NOT NULL,
+    enddate     DATE          NOT NULL,
     cardname    VARCHAR(255)  NOT NULL,
     cardno      VARCHAR(16)   NOT NULL,
     expdate     INT           NOT NULL,
@@ -76,3 +78,12 @@ CREATE TABLE return(
     FOREIGN KEY (rentid)  REFERENCES rent,
     PRIMARY KEY (rentid)
 );
+
+-- Adding examples of vehicle types
+INSERT INTO vehicletype VALUES('SUV', NULL, 7.0, 1.0, 0.1, 0.1, 5.0, 1.0, 0.1);
+
+-- Adding examples of vehicles
+INSERT INTO vehicle VALUES('AAA1234', 'SUV', 0, 'A', 'Blue', '300 Example St.', 'Vancouver');
+
+-- Adding examples of customers
+INSERT INTO customer VALUES('12345678', 'Lucca Siaudzionis', 6046001234, '123 Example St.');

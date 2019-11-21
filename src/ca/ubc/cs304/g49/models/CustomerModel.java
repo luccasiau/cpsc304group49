@@ -6,32 +6,27 @@ import ca.ubc.cs304.g49.util.Util;
 import java.io.BufferedReader;
 import java.util.Optional;
 
+/**
+ * Class for handling customers in memory.
+ *
+ * This has a readCustomerInfo method that will facilitate reading input from
+ * a provided BufferedReader.
+ */
 public class CustomerModel {
   private String dlicense;
   private String name;
   private long cellNum;
   private String address;
 
-  public String getDlicense() {
-    return dlicense;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public long getCellNum() {
-    return cellNum;
-  }
-
-  public String getAddress() {
-    return address;
-  }
-
   public void setDlicense(String dlicense) {
     this.dlicense = dlicense;
   }
 
+  /**
+   * Will ask the user to provide values to some fields via a reader.
+   *
+   * @param reader: some BufferedReader. Likely set to STDIN.
+   */
   public void readCustomerInfo(BufferedReader reader) {
     if (dlicense == null) {
       readDlicense(reader);
@@ -75,5 +70,21 @@ public class CustomerModel {
         "Enter customer's address: ",
         FieldSizes.MAXIMUM_ADDRESS_SIZE,
         true);
+  }
+
+  public String getDlicense() {
+    return dlicense;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public long getCellNum() {
+    return cellNum;
+  }
+
+  public String getAddress() {
+    return address;
   }
 }

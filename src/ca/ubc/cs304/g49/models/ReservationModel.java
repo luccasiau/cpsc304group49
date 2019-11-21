@@ -7,6 +7,12 @@ import java.io.BufferedReader;
 import java.sql.Date;
 import java.util.Optional;
 
+/**
+ * Class for handling reservations in memory.
+ *
+ * This has a readReservationInfo method that facilitates reading input from a
+ * provided BufferedReader.
+ */
 public class ReservationModel {
   private String confno;
   private String vtname;
@@ -23,7 +29,23 @@ public class ReservationModel {
     city = null;
     startDate = null;
     endDate = null;
-    confno = Util.randomHash(10);
+    confno = Util.randomHash(FieldSizes.MAXIMUM_CONFNO_SIZE);
+  }
+
+  public ReservationModel(String confno,
+                          String vtname,
+                          String dlicense,
+                          String location,
+                          String city,
+                          Date startDate,
+                          Date endDate) {
+    this.confno = confno;
+    this.vtname = vtname;
+    this.dlicense = dlicense;
+    this.location = location;
+    this.city = city;
+    this.startDate = startDate;
+    this.endDate = endDate;
   }
 
   public String getVtname() {
