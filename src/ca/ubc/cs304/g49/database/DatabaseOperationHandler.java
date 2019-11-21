@@ -50,7 +50,28 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
 
   @Override
   public boolean insertReservation(ReservationModel reservationModel) {
-    return false;  // stub
+    try {
+      PreparedStatement ps = dbConnectionHandler.getConnection()
+          .prepareStatement("INSERT INTO reservation VALUES (?, ?, ?, ?, ?, ?, ?)");
+
+      ps.setString(1, reservationModel.getConfno());
+      ps.setString(2, reservationModel.getDlicense());
+      ps.setString(3, reservationModel.getVtname());
+      ps.setString(4, reservationModel.getLocation());
+      ps.setString(5, reservationModel.getCity());
+      ps.setDate(6, reservationModel.getStartDate());
+      ps.setDate(7, reservationModel.getEndDate());
+
+      ps.executeUpdate();
+      dbConnectionHandler.getConnection().commit();
+      ps.close();
+
+    } catch (SQLException e) {
+      dbConnectionHandler.rollbackConnection();
+      Util.printException(e.getMessage());
+      return false;
+    }
+    return true;
   }
 
   @Override
@@ -61,7 +82,12 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
       ps.setString(1, dlicense);
 
       ResultSet rs = ps.executeQuery();
-      return rs.next();
+
+      boolean hasNext = rs.next();
+      dbConnectionHandler.getConnection().commit();
+      ps.close();
+
+      return hasNext;
     } catch (SQLException e) {
       dbConnectionHandler.rollbackConnection();
       Util.printException(e.getMessage());
