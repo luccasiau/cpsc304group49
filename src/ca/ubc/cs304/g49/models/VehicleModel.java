@@ -76,7 +76,7 @@ public class VehicleModel {
   public Date getEndDate(){
     return getEndDate();
   }
-  public String readVehicleInfo(BufferedReader reader) {
+  public void readVehicleInfo(BufferedReader reader) {
      vtname = Util.genericStringRead(
             reader,
             "Enter car type's name: ",
