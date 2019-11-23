@@ -239,9 +239,6 @@ public class CommandLineUi {
     //create empty model
     VehicleModel vm = new VehicleModel("", "", 0, "", "", "", "");
     vm.readVehicleInfo(bufferedReader);
-
-    System.out.println("\nViewing %d");
-
     ArrayList<VehicleModel> availVehicles = delegate.fetchAvailableVehicles(vm.getVtname(), vm.getLocation(), vm.getstartDate(), vm.getEndDate());
 
     if(availVehicles.size() > 0){

@@ -79,7 +79,7 @@ public class VehicleModel {
   public void readVehicleInfo(BufferedReader reader) {
      vtname = Util.genericStringRead(
             reader,
-            "Enter car type's name: ",
+            "Enter car type's name, must be one of: [SUV] [Sedan] [Crossover] [Coupe] [Convertible]",
             FieldSizes.MAXIMUM_VTNAME_SIZE,
             true);
      location = Util.genericStringRead(
@@ -95,15 +95,6 @@ public class VehicleModel {
             reader,
             "Enter end date (yyyy-mm-dd): ",
             start);
-
-
-//    //check if none
-//    String query = "";
-//    query += carType;
-//    query += (query == "" ? location : " AND " + location);
-//    query += (query == "" ? startTimeInterval + " AND " + endTimeInterval : " AND " + startTimeInterval + " AND " + endTimeInterval);
-
-
 
   }
 
