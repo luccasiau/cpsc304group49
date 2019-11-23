@@ -10,6 +10,7 @@ import ca.ubc.cs304.g49.util.Util;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Optional;
 
 /**
@@ -65,7 +66,8 @@ public class CommandLineUi {
       System.out.println("1. Create customer account.");
       System.out.println("2. [Customer] Make new reservation.");
       System.out.println("3. [Clerk] Make new rental.");
-      System.out.println("4. Quit.");
+      System.out.println("4. [Customer] View number of available vehicles");
+      System.out.println("5. Quit.");
       System.out.print("Please choose one of the above options: ");
 
       inputOptional = Util.readInteger(bufferedReader, false);
@@ -82,6 +84,9 @@ public class CommandLineUi {
             handleNewRent();
             break;
           case 4:
+            handleAvailableVehicles();
+            break;
+          case 5:
             handleQuit();
             break;
           default:
@@ -230,6 +235,23 @@ public class CommandLineUi {
     }
   }
 
+  private void handleAvailableVehicles(){
+    //create empty model
+    VehicleModel vm = new VehicleModel("", "", 0, "", "", "", "");
+    vm.readVehicleInfo(bufferedReader);
+
+    System.out.println("\nViewing %d");
+
+    ArrayList<VehicleModel> availVehicles = delegate.fetchAvailableVehicles(vm.getVtname(), vm.getLocation(), vm.getstartDate(), vm.getEndDate());
+
+    if(availVehicles.size() > 0){
+      String res = "Currently : %d" + " available vehickes";
+      String.format(res, availVehicles.size());
+      System.out.println(res);
+    } else {
+      System.out.println("No available vehicles.");
+    }
+  }
   private void handleQuit() {
     // TODO
     System.out.println("\n\nQuitting now. Bye!\n");
