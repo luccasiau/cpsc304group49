@@ -91,6 +91,20 @@ public class CommandLineUi {
             handleAvailableVehicles();
             break;
           case 5:
+              handleReturnVehicle();
+              break;
+          case 6:
+            handleDailyRentals();
+            break;
+          case 7:
+            handleDailyRentalsBranch();
+            break;
+          case 8:
+            handleDailyReturns();
+            break;
+          case 9:
+            handleDailyReturnsBranch();
+          case 10:
             handleReturn();
             break;
           case 6:
@@ -393,6 +407,25 @@ public class CommandLineUi {
       System.out.println("No returned vehicles today.");
     }
   }
+
+
+  /**
+   * When returning a vehicle, display a receipt with the necessary details
+   * (reservation confirmation number, date of return, how the total was calculated etc.)
+   * if vehicle wasn't rented, return error.
+   */
+  private void handleReturnVehicle(){
+    VehicleModel vm = new VehicleModel("", "", 0, "", "", "", "");
+    vm.readVehicleInfo(bufferedReader);
+    //if vehicle is rented out, return confNo, date of return, total fees
+
+    System.out.println("ok");
+
+  }
+  private void handleDailyRentals(){}
+  private void handleDailyRentalsBranch(){}
+  private void handleDailyReturns(){}
+  private void handleDailyReturnsBranch(){}
 
   private void handleQuit() {
     // TODO
