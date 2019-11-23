@@ -6,9 +6,9 @@ import ca.ubc.cs304.g49.models.*;
 import ca.ubc.cs304.g49.util.FieldSizes;
 import ca.ubc.cs304.g49.util.Util;
 
+import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -101,10 +101,11 @@ public class CommandLineUi {
             break;
           case 9:
             handleDailyReturnsBranch();
+            break;
           case 5:
             handleReturn();
             break;
-          case 10:
+          case 6:
             handleQuit();
             break;
           default:

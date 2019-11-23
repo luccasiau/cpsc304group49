@@ -28,6 +28,8 @@ public interface CommandLineUiDelegate {
   VehicleTypeModel fetchVehicleType(String vtname);
   VehicleModel fetchVehicle(String vlicense);
   VehicleModel fetchVehicleFromTypeAndBranch(String vtname, String location, String city);
+  ArrayList<VehicleModel>  fetchAvailableVehicles(String vtname, String location, Date start, Date End);
+
   ArrayList<VehicleModel>  fetchAvailableVehicles(
       String vtname, String location, String city);
   int countActiveRentalsAndReservations(
