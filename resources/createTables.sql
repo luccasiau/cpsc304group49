@@ -111,7 +111,7 @@ INSERT INTO vehicle VALUES('AAA8237', 'SUV', 2200, 'A', 'Red', '600 Example St.'
 INSERT INTO vehicle VALUES('BAA1234', 'Sedan', 1000, 'A', 'Blue', '300 Example St.', 'Vancouver');
 INSERT INTO vehicle VALUES('BAA1235', 'Sedan', 2000, 'A', 'Black', '300 Example St.', 'Vancouver');
 INSERT INTO vehicle VALUES('BAA1236', 'Sedan', 3000, 'A', 'Grey', '300 Example St.', 'Vancouver');
-INSERT INTO vehicle VALUES('BAA2237', 'Sedan', 2200, 'A', 'Black', '300 Example St.', 'Vancouver');
+INSERT INTO vehicle VALUES('BBA2237', 'Sedan', 2200, 'A', 'Black', '300 Example St.', 'Vancouver');
 INSERT INTO vehicle VALUES('BAA2234', 'Sedan', 1000, 'A', 'Black', '300 Example St.', 'Vancouver');
 INSERT INTO vehicle VALUES('BAA2235', 'Sedan', 2000, 'A', 'Black', '400 Example St.', 'Vancouver');
 INSERT INTO vehicle VALUES('BAA2236', 'Sedan', 1050, 'A', 'Green', '400 Example St.', 'Vancouver');
