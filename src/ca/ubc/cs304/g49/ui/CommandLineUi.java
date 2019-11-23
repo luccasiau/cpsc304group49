@@ -245,9 +245,8 @@ public class CommandLineUi {
     ArrayList<VehicleModel> availVehicles = delegate.fetchAvailableVehicles(vm.getVtname(), vm.getLocation(), vm.getstartDate(), vm.getEndDate());
 
     if(availVehicles.size() > 0){
-      String res = "Currently : %d" + " available vehickes";
-      String.format(res, availVehicles.size());
-      System.out.println(res);
+      System.out.printf("Currently: %d available vehicles%n", availVehicles.size());
+
     } else {
       System.out.println("No available vehicles.");
     }
