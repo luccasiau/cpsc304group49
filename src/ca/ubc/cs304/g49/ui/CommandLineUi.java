@@ -6,6 +6,7 @@ import ca.ubc.cs304.g49.models.CustomerModel;
 import ca.ubc.cs304.g49.models.RentModel;
 import ca.ubc.cs304.g49.models.ReservationModel;
 import ca.ubc.cs304.g49.models.VehicleModel;
+import ca.ubc.cs304.g49.util.FieldSizes;
 import ca.ubc.cs304.g49.util.Util;
 
 import java.io.BufferedReader;
@@ -240,13 +241,29 @@ public class CommandLineUi {
     VehicleModel vm = new VehicleModel("", "", 0, "", "", "", "");
     vm.readVehicleInfo(bufferedReader);
     ArrayList<VehicleModel> availVehicles = delegate.fetchAvailableVehicles(vm.getVtname(), vm.getLocation(), vm.getstartDate(), vm.getEndDate());
+  int numVehicles = availVehicles.size();
+    if(numVehicles > 0){
+      System.out.printf("Currently: %d available vehicles%n", numVehicles);
+      //check if they want to see the vehicles
+      String response = Util.genericStringRead(
+              bufferedReader,
+              String.format("Would you like to see the %d ? [y/n]", numVehicles),
+              FieldSizes.MAXIMUM_VTNAME_SIZE,
+              false);
 
-    if(availVehicles.size() > 0){
-      System.out.printf("Currently: %d available vehicles%n", availVehicles.size());
+      if(response.toLowerCase() == "y" || response.toLowerCase() == "yes"){
+        for(VehicleModel availableVehicles : availVehicles){
+          System.out.println("vehicle license: " + availableVehicles.getVlicense() + " at: " + availableVehicles.getLocation() + " type: " + availableVehicles.getVtname());
+        }
+      } else {
+        System.out.println("Okay bye.");
+      }
 
     } else {
       System.out.println("No available vehicles.");
     }
+
+
   }
   private void handleQuit() {
     // TODO
