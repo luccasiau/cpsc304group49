@@ -70,11 +70,11 @@ public class VehicleModel {
   }
 
   public Date getstartDate(){
-    return getstartDate();
+    return start;
   }
 
   public Date getEndDate(){
-    return getEndDate();
+    return end;
   }
   public void readVehicleInfo(BufferedReader reader) {
      vtname = Util.genericStringRead(
