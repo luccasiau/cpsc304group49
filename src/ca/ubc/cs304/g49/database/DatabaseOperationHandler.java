@@ -248,13 +248,11 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
               .prepareStatement(
                       "SELECT * FROM vehicle " +
                               "WHERE vtname = ?" +
-                              "   AND location = ?" +
-                              "    startDate >= = ?" +
-                              "   AND endDate <= ?");
+                              "   AND location = ?");
       ps.setString(1, vtname);
       ps.setString(2, location);
-      ps.setDate(3, start);
-      ps.setDate(4, end);
+//      ps.setDate(3, start);
+//      ps.setDate(4, end);
 
       ResultSet rs = ps.executeQuery();
 
@@ -268,6 +266,8 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                 rs.getString("city"));
         result.add(newVehicle);
       }
+
+      dbConnectionHandler.getConnection().commit();
       rs.close();
       ps.close();
 
