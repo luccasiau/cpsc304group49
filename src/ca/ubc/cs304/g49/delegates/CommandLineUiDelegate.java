@@ -23,4 +23,5 @@ public interface CommandLineUiDelegate {
   ReservationModel fetchReservation(String confno);
   VehicleModel fetchVehicleFromTypeAndBranch(String vtname, String location, String city);
   ArrayList<VehicleModel>  fetchAvailableVehicles(String vtname, String location, Date start, Date End);
+
 }

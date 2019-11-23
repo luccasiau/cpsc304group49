@@ -68,7 +68,12 @@ public class CommandLineUi {
       System.out.println("2. [Customer] Make new reservation.");
       System.out.println("3. [Clerk] Make new rental.");
       System.out.println("4. [Customer] View number of available vehicles");
-      System.out.println("5. Quit.");
+      System.out.println("5. [Clerk] Return a vehicle");
+      System.out.println("6. [Clerk] Generate daily rentals");
+      System.out.println("7. [Clerk] Generate daily rentals for Branch");
+      System.out.println("8. [Clerk] Generate daily returns");
+      System.out.println("9. [Clerk] Generate daily returns for Branch");
+      System.out.println("10. Quit.");
       System.out.print("Please choose one of the above options: ");
 
       inputOptional = Util.readInteger(bufferedReader, false);
@@ -88,6 +93,20 @@ public class CommandLineUi {
             handleAvailableVehicles();
             break;
           case 5:
+              handleReturnVehicle();
+              break;
+          case 6:
+            handleDailyRentals();
+            break;
+          case 7:
+            handleDailyRentalsBranch();
+            break;
+          case 8:
+            handleDailyReturns();
+            break;
+          case 9:
+            handleDailyReturnsBranch();
+          case 10:
             handleQuit();
             break;
           default:
@@ -265,6 +284,25 @@ public class CommandLineUi {
 
 
   }
+
+  /**
+   * When returning a vehicle, display a receipt with the necessary details
+   * (reservation confirmation number, date of return, how the total was calculated etc.)
+   * if vehicle wasn't rented, return error.
+   */
+  private void handleReturnVehicle(){
+    VehicleModel vm = new VehicleModel("", "", 0, "", "", "", "");
+    vm.readVehicleInfo(bufferedReader);
+    //if vehicle is rented out, return confNo, date of return, total fees
+
+    System.out.println("ok");
+
+  }
+  private void handleDailyRentals(){}
+  private void handleDailyRentalsBranch(){}
+  private void handleDailyReturns(){}
+  private void handleDailyReturnsBranch(){}
+
   private void handleQuit() {
     // TODO
     System.out.println("\n\nQuitting now. Bye!\n");
