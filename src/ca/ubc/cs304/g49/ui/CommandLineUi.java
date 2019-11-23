@@ -251,7 +251,7 @@ public class CommandLineUi {
               FieldSizes.MAXIMUM_VTNAME_SIZE,
               false);
 
-      if(response.toLowerCase() == "y" || response.toLowerCase() == "yes"){
+      if(response.toLowerCase().equals("y") || response.toLowerCase().equals("yes")){
         for(VehicleModel availableVehicles : availVehicles){
           System.out.println("vehicle license: " + availableVehicles.getVlicense() + " at: " + availableVehicles.getLocation() + " type: " + availableVehicles.getVtname());
         }
