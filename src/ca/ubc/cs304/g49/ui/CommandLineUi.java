@@ -6,10 +6,12 @@ import ca.ubc.cs304.g49.models.CustomerModel;
 import ca.ubc.cs304.g49.models.RentModel;
 import ca.ubc.cs304.g49.models.ReservationModel;
 import ca.ubc.cs304.g49.models.VehicleModel;
+import ca.ubc.cs304.g49.util.FieldSizes;
 import ca.ubc.cs304.g49.util.Util;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Optional;
 
 /**
@@ -65,7 +67,8 @@ public class CommandLineUi {
       System.out.println("1. Create customer account.");
       System.out.println("2. [Customer] Make new reservation.");
       System.out.println("3. [Clerk] Make new rental.");
-      System.out.println("4. Quit.");
+      System.out.println("4. [Customer] View number of available vehicles");
+      System.out.println("5. Quit.");
       System.out.print("Please choose one of the above options: ");
 
       inputOptional = Util.readInteger(bufferedReader, false);
@@ -82,6 +85,9 @@ public class CommandLineUi {
             handleNewRent();
             break;
           case 4:
+            handleAvailableVehicles();
+            break;
+          case 5:
             handleQuit();
             break;
           default:
@@ -230,6 +236,35 @@ public class CommandLineUi {
     }
   }
 
+  private void handleAvailableVehicles(){
+    //create empty model
+    VehicleModel vm = new VehicleModel("", "", 0, "", "", "", "");
+    vm.readVehicleInfo(bufferedReader);
+    ArrayList<VehicleModel> availVehicles = delegate.fetchAvailableVehicles(vm.getVtname(), vm.getLocation(), vm.getstartDate(), vm.getEndDate());
+  int numVehicles = availVehicles.size();
+    if(numVehicles > 0){
+      System.out.printf("Currently: %d available vehicles%n", numVehicles);
+      //check if they want to see the vehicles
+      String response = Util.genericStringRead(
+              bufferedReader,
+              String.format("Would you like to see the %d ? [y/n]", numVehicles),
+              FieldSizes.MAXIMUM_VTNAME_SIZE,
+              false);
+
+      if(response.toLowerCase().equals("y") || response.toLowerCase().equals("yes")){
+        for(VehicleModel availableVehicles : availVehicles){
+          System.out.println("vehicle license: " + availableVehicles.getVlicense() + " at: " + availableVehicles.getLocation() + " type: " + availableVehicles.getVtname());
+        }
+      } else {
+        System.out.println("Okay bye.");
+      }
+
+    } else {
+      System.out.println("No available vehicles.");
+    }
+
+
+  }
   private void handleQuit() {
     // TODO
     System.out.println("\n\nQuitting now. Bye!\n");

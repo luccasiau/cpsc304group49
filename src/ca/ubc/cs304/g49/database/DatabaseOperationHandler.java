@@ -7,10 +7,8 @@ import ca.ubc.cs304.g49.models.ReservationModel;
 import ca.ubc.cs304.g49.models.VehicleModel;
 import ca.ubc.cs304.g49.util.Util;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
+import java.util.ArrayList;
 
 public class DatabaseOperationHandler implements CommandLineUiDelegate {
   private DatabaseConnectionHandler dbConnectionHandler;
@@ -241,4 +239,45 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
       return null;
     }
   }
+
+  @Override
+  public ArrayList<VehicleModel> fetchAvailableVehicles(String vtname, String location, Date start, Date end){
+    ArrayList<VehicleModel> result = new ArrayList<>();
+    try {
+      PreparedStatement ps = dbConnectionHandler.getConnection()
+              .prepareStatement(
+                      "SELECT * FROM vehicle " +
+                              "WHERE vtname = ?" +
+                              "   AND location = ?");
+      ps.setString(1, vtname);
+      ps.setString(2, location);
+//      ps.setDate(3, start);
+//      ps.setDate(4, end);
+
+      ResultSet rs = ps.executeQuery();
+
+      while(rs.next()){
+        VehicleModel newVehicle =  new VehicleModel(rs.getString("vlicense"),
+        rs.getString("vtname"),
+                rs.getInt("odometer"),
+                rs.getString("status"),
+                rs.getString("colour"),
+                rs.getString("location"),
+                rs.getString("city"));
+        result.add(newVehicle);
+      }
+
+      dbConnectionHandler.getConnection().commit();
+      rs.close();
+      ps.close();
+
+    } catch (Exception e){
+      dbConnectionHandler.rollbackConnection();
+      Util.printException(e.getMessage());
+      return result;
+    }
+
+    return result;
+  }
+
 }

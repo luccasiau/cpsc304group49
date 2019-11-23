@@ -11,4 +11,5 @@ public class FieldSizes {
   public static final int MAXIMUM_RENTID_SIZE = 20;
   public static final int MAXIMUM_CARDNO_SIZE = 16;
   public static final int MAXIMUM_CARDNAME_SIZE = 255;
+
 }
