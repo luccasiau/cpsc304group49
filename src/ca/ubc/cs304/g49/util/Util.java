@@ -130,7 +130,7 @@ public class Util {
     Random random = new Random();
 
     for (int i = 0; i < length; i++) {
-      buffer[i] = alphanum.charAt(random.nextInt(length));
+      buffer[i] = alphanum.charAt(random.nextInt(alphanum.length()));
     }
     return new String(buffer);
   }
