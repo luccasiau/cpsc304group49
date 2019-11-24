@@ -31,5 +31,6 @@ public interface CommandLineUiDelegate {
   int countActiveRentalsAndReservations(
       String vtname, String location, String city, Date start, Date end);
   ArrayList<VehicleModel>  fetchAvailableVehicles(String vtname, String location, Date start, Date End);
+  ArrayList<VehicleModel>  fetchReturnedVehicles();
 
 }
