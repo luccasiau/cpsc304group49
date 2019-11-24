@@ -18,6 +18,7 @@ public interface CommandLineUiDelegate {
   boolean dlicenseExist(String dlicense);
   boolean confnoExist(String confno);
   boolean updateVehicleStatus(String vlicense, String status);
+  boolean updateVehicleOdometer(String vlicense, int odometer);
   ReservationModel fetchReservation(String confno);
   RentModel fetchRental(String rentId);
   VehicleModel fetchVehicleFromTypeAndBranch(String vtname, String location, String city);

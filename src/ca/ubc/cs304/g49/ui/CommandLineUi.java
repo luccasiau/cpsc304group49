@@ -289,7 +289,6 @@ public class CommandLineUi {
     ReturnModel returnModel = new ReturnModel();
 
     returnModel.readRentID(bufferedReader);
-    // TODO implement fetchRental
     RentModel rentalModel = delegate.fetchRental(returnModel.getRentID());
     if (rentalModel == null) {
       Util.printWarning("The rentID you entered was not found. Only rented vehicles can be returned.\n");
@@ -301,17 +300,16 @@ public class CommandLineUi {
     // technically should be >= odometer of vehicle at start time of rental
     returnModel.readOdometer(bufferedReader);
     returnModel.readFullTank(bufferedReader);
-
-    // get vehicle -> update odemeter, set to Available
-    // get vehicle model -> to calculate revenue
+    returnModel.calculateRevenue(rentalModel.getVtname());
 
     // Insert into database.
     if (delegate.insertReturn(returnModel)) {
+      while (!delegate.updateVehicleOdometer(rentalModel.getVlicense(), returnModel.getOdometer()));
       while (!delegate.updateVehicleStatus(rentalModel.getVlicense(), "A"));
       System.out.println("\nReturn Successful!");
       System.out.printf("Reservation confirmation number: %s%n", rentalModel.getRentid());
       System.out.printf("Date of Return: %s%n",returnModel.getReturnDate());
-      System.out.printf("Total cost: %s%n", returnModel.getRevenue());
+      System.out.printf("Total cost for rental: %s%n", returnModel.getRevenue());
     } else {
       Util.printWarning("Vehicle return failed.");
     }

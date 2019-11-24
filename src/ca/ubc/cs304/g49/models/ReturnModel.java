@@ -10,13 +10,13 @@ public class ReturnModel {
     private String rentID;
     private Date returnDate;
     private int odometer;
-    private double revenue;
-    private boolean fullTank;
+    private float revenue;
+    private Boolean fullTank;
 
     public void readRentID(BufferedReader reader) {
         rentID = Util.genericStringRead(
                 reader,
-                "Enter your RentID",
+                "Enter RentID",
                 FieldSizes.MAXIMUM_RENTID_SIZE,
                 false);
     }
@@ -29,18 +29,23 @@ public class ReturnModel {
     }
 
     public void readOdometer(BufferedReader reader) {
+        System.out.print("Enter odometer reading: ");
         odometer = Util.readInteger(
                 reader,
                 false)
                 .orElse(1000);
     }
 
-    public void readRevenue(BufferedReader reader) {
-
+    public void calculateRevenue(String vtname) {
+        // TODO
     }
 
     public void readFullTank(BufferedReader reader) {
-
+        System.out.print("Is the tank full? [True] [False] ");
+        fullTank = Util.readBoolean(
+                reader,
+                false)
+                .orElse(Boolean.TRUE);
     }
 
     public String getRentID() { return rentID; }
@@ -49,7 +54,7 @@ public class ReturnModel {
 
     public int getOdometer() { return odometer; }
 
-    public double getRevenue() { return revenue; }
+    public float getRevenue() { return revenue; }
 
     public boolean isFullTank() { return fullTank; }
 }
