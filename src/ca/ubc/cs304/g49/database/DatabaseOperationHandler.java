@@ -320,7 +320,8 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                    "WHERE vtname = ?" +
                   "   AND location = ?" +
                   "   AND city = ?" +
-                  "   AND status = ?");
+                  "   AND status = ?" +
+                  "   ORDER BY vlicense DESC");
       ps.setString(1, vtname);
       ps.setString(2, location);
       ps.setString(3, city);
@@ -351,19 +352,20 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
   }
 
   @Override
-  public ArrayList<VehicleModel> fetchAvailableVehicles(String vtname, String location, Date start, Date end){
+  public ArrayList<VehicleModel> fetchAvailableVehicles(
+      String vtname, String location, String city, Date start, Date end) {
     ArrayList<VehicleModel> result = new ArrayList<>();
     try {
       PreparedStatement ps = dbConnectionHandler.getConnection()
               .prepareStatement(
                       "SELECT * FROM vehicle " +
                               "WHERE vtname = ?" +
-                              "   AND location = ?");
+                              "   AND location = ? AND city = ?" +
+                              "   ORDER BY vlicense ASC");
       // FIXME: Add city to this query.
       ps.setString(1, vtname);
       ps.setString(2, location);
-//      ps.setDate(3, start);
-//      ps.setDate(4, end);
+      ps.setString(3, city);
 
       ResultSet rs = ps.executeQuery();
 
@@ -395,8 +397,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
    * Counts the number of current reservations that intersect the time period
    * defined by [start, end] for that current location & city.
    */
-  @Override
-  public int countActiveReservations(String vtname, String location, String city, Date start, Date end) {
+  private int countActiveReservations(String vtname, String location, String city, Date start, Date end) {
     try {
       PreparedStatement ps = dbConnectionHandler.getConnection()
           .prepareStatement(
@@ -446,8 +447,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
    * Count number of rentals made for that type, date, and branch that
    * did not have any reservation confirmation number.
    */
-  @Override
-  public int countActiveRentalsNoConf(String vtname, String location, String city, Date start, Date end) {
+  private int countActiveRentalsNoConf(String vtname, String location, String city, Date start, Date end) {
     try {
       PreparedStatement ps = dbConnectionHandler.getConnection()
           .prepareStatement(
