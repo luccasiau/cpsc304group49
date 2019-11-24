@@ -298,7 +298,9 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                    " AND ( " +
                    "     (startdate >= ? AND startdate <= ?) " +
                    "     OR " +
-                   "     (enddate >= ? AND enddate <= ?))");
+                   "     (enddate >= ? AND enddate <= ?) " +
+                   "     OR " +
+                   "     (enddate >= ? AND startdate <= ?))");
       ps.setString(1, location);
       ps.setString(2, city);
       ps.setString(3, vtname);
@@ -306,6 +308,8 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
       ps.setDate(5, end);
       ps.setDate(6, start);
       ps.setDate(7, end);
+      ps.setDate(8, end);
+      ps.setDate(9, start);
 
       // System.out.println("DEBUG: " + ps);
 
@@ -336,7 +340,6 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
   @Override
   public int countActiveRentalsNoConf(String vtname, String location, String city, Date start, Date end) {
     try {
-      // FIXME: I need to set confno to NULL.
       PreparedStatement ps = dbConnectionHandler.getConnection()
           .prepareStatement(
               "SELECT COUNT(*) as num FROM rent R, vehicle V" +
@@ -348,7 +351,9 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                    " AND ( " +
                    "      (R.startdate >= ? AND R.startdate <= ?) " +
                    "      OR " +
-                   "      (R.enddate >= ? AND R.enddate <= ?))");
+                   "      (R.enddate >= ? AND R.enddate <= ?) " +
+                   "      OR " +
+                   "      (R.enddate >= ? AND R.startdate <= ?))");
       ps.setString(1, location);
       ps.setString(2, city);
       ps.setString(3, vtname);
@@ -356,8 +361,8 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
       ps.setDate(5, end);
       ps.setDate(6, start);
       ps.setDate(7, end);
-
-      // System.out.println("DEBUG: ps");
+      ps.setDate(8, end);
+      ps.setDate(9, start);
 
       ResultSet rs = ps.executeQuery();
 
