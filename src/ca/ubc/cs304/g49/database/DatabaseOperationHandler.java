@@ -250,7 +250,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
   public RentModel fetchRental(String rentId) {
     try {
       PreparedStatement ps = dbConnectionHandler.getConnection()
-              .prepareStatement("SELECT * FROM rental WHERE rentid = ?");
+              .prepareStatement("SELECT * FROM rent WHERE rentid = ?");
       ps.setString(1, rentId);
 
       ResultSet rs = ps.executeQuery();

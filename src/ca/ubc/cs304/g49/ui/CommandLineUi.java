@@ -302,12 +302,18 @@ public class CommandLineUi {
 
   private void handleReturn() {
     ReturnModel returnModel = new ReturnModel();
-
     returnModel.readRentID(bufferedReader);
     RentModel rentalModel = delegate.fetchRental(returnModel.getRentID());
-    if (rentalModel == null) {
-      Util.printWarning("The rentID you entered was not found. Only rented vehicles can be returned.\n");
-      return;
+    String in = "";
+    while (rentalModel == null) {
+      while (!in.toLowerCase().equals("y") && !in.toLowerCase().equals("n")) {
+        Util.printWarning("The rentID you entered was not found. Do you have a rentID? [y/n]: ");
+        in = Util.readString(bufferedReader, 255, true).orElse("");
+      }
+      if (in.equals("n")) return;
+
+      returnModel.readRentID(bufferedReader);
+      rentalModel = delegate.fetchRental(returnModel.getRentID());
     }
 
     // return date should at least be later than the start date

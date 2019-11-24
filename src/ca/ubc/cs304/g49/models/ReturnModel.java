@@ -16,7 +16,7 @@ public class ReturnModel {
     public void readRentID(BufferedReader reader) {
         rentID = Util.genericStringRead(
                 reader,
-                "Enter RentID",
+                "Enter RentID: ",
                 FieldSizes.MAXIMUM_RENTID_SIZE,
                 false);
     }
