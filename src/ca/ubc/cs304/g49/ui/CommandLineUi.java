@@ -379,7 +379,12 @@ public class CommandLineUi {
   private void handleDailyRentals(){}
   private void handleDailyRentalsBranch(){}
   private void handleDailyReturns(){}
-  private void handleDailyReturnsBranch(){}
+  private void handleDailyReturnsBranch(){
+    ArrayList<VehicleModel> returned; // list of returned vehicles today
+
+    returned = delegate.fetchReturnedVehicles();
+
+  }
 
   private void handleQuit() {
     // TODO
