@@ -90,6 +90,9 @@ public class CommandLineUi {
           case 4:
             handleAvailableVehicles();
             break;
+          case 5:
+            handleReturn();
+            break;
           case 6:
             handleDailyRentals();
             break;
@@ -101,11 +104,7 @@ public class CommandLineUi {
             break;
           case 9:
             handleDailyReturnsBranch();
-            break;
-          case 5:
-            handleReturn();
-            break;
-          case 6:
+          case 10:
             handleQuit();
             break;
           default:
@@ -394,11 +393,6 @@ public class CommandLineUi {
       System.out.println("No returned vehicles today.");
     }
   }
-
-  //New rentals within that day
-  private void handleDailyRentals(){}
-  private void handleDailyRentalsBranch(){}
-  private void handleDailyReturnsBranch(){}
 
   //Must generate report for any day.
   private void handleDailyReturns() {
