@@ -104,11 +104,10 @@ public class CommandLineUi {
             break;
           case 9:
             handleDailyReturnsBranch();
-            break;
-          case 10:
+          case 5:
             handleReturn();
             break;
-          case 11:
+          case 10:
             handleQuit();
             break;
           default:
