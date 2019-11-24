@@ -9,6 +9,9 @@ import ca.ubc.cs304.g49.util.Util;
 import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -107,7 +110,7 @@ public class CommandLineUi {
           case 10:
             handleReturn();
             break;
-          case 6:
+          case 11:
             handleQuit();
             break;
           default:
@@ -353,22 +356,33 @@ public class CommandLineUi {
     System.out.println("o");
 
   }
+
+  //New rentals within that day
   private void handleDailyRentals(){}
   private void handleDailyRentalsBranch(){}
-  private void handleDailyReturns(){}
-  private void handleDailyReturnsBranch(){
-    ArrayList<VehicleModel> returned; // list of returned vehicles today
+  private void handleDailyReturnsBranch(){}
 
-    returned = delegate.fetchReturnedVehicles();
-    int numVehicles = returned.size();
-
-    if(numVehicles > 0 ){
-      for(VehicleModel v : returned){
-        System.out.println("vehicle license: " + v.getVlicense() + " at: " + v.getLocation() + " type: " + v.getVtname());
+  //Must generate report for any day.
+  private void handleDailyReturns(){
+      Date minDate = Date.valueOf("1990-01-01");
+      Date currDate = Util.genericDateRead(bufferedReader, "Which day would you like to generate Daily Returns for? [yyyy-mm-dd] ", minDate);
+    ResultSet rs = delegate.generateReturnReport(currDate);
+      try {
+          if(rs.getFetchSize() >0){
+              while(rs.next()){ //for each row
+                  System.out.println("Location: " + rs.getString(0) +
+                          " City: " + rs.getString(1) +
+                          " vehicle type name :" + rs.getString(2) +
+                          " Count: " + rs.getInt(3) +
+                          " Sum: " + rs.getInt(4));
+              }
+          }
+          else {
+              System.out.printf("No returned vehicles for date %s%n", currDate);
+          }
+      } catch (SQLException e) {
+          e.printStackTrace();
       }
-    } else {
-      System.out.println("No returned vehicles today.");
-    }
   }
 
   private void handleQuit() {

@@ -3,6 +3,7 @@ package ca.ubc.cs304.g49.delegates;
 import ca.ubc.cs304.g49.models.*;
 
 import java.sql.Date;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 /**
@@ -29,7 +30,6 @@ public interface CommandLineUiDelegate {
   int countActiveRentalsNoConf(String vtname, String location, String city, Date start, Date end);
   int countActiveRentalsAndReservations(
       String vtname, String location, String city, Date start, Date end);
-  ArrayList<VehicleModel>  fetchAvailableVehicles(String vtname, String location, Date start, Date End);
-  ArrayList<VehicleModel>  fetchReturnedVehicles();
+  ResultSet generateReturnReport(Date curr);
 
 }
