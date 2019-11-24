@@ -410,6 +410,7 @@ public class CommandLineUi {
 
 
   /**
+   * todo
    * When returning a vehicle, display a receipt with the necessary details
    * (reservation confirmation number, date of return, how the total was calculated etc.)
    * if vehicle wasn't rented, return error.
@@ -419,13 +420,18 @@ public class CommandLineUi {
     vm.readVehicleInfo(bufferedReader);
     //if vehicle is rented out, return confNo, date of return, total fees
 
-    System.out.println("ok");
+    System.out.println("o");
 
   }
   private void handleDailyRentals(){}
   private void handleDailyRentalsBranch(){}
   private void handleDailyReturns(){}
-  private void handleDailyReturnsBranch(){}
+  private void handleDailyReturnsBranch(){
+    ArrayList<VehicleModel> returned; // list of returned vehicles today
+
+    returned = delegate.fetchReturnedVehicles();
+
+  }
 
   private void handleQuit() {
     // TODO
