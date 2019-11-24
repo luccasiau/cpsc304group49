@@ -521,7 +521,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
       ps.setDate(1, date); //set today date
 
       ResultSet rs = ps.executeQuery();
-      if (rs.getRow() != 0) {
+      if (rs.isBeforeFirst()) {
         while(rs.next()){ //for each row
           System.out.println("Location: " + rs.getString(1) +
                   " City: " + rs.getString(2) +
