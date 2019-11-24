@@ -515,22 +515,22 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
               .prepareStatement(
                       "SELECT V.location, V.city, V.vtname, count(*), sum(R2.revenue) " +
                               "FROM Rent R, Vehicle V, Return R2 " +
-                              "WHERE R2.rentId = R.rentId AND R2.returnDate BETWEEN ? AND ? " +
+                              "WHERE R2.rentId = R.rentId AND R2.returnDate = ? " +
                               "GROUP BY V.location, V.city, V.vtname "
                               );
       ps.setDate(1, date); //set today date
-      ps.setDate(2, date);
 
       ResultSet rs = ps.executeQuery();
       if (rs.getFetchSize() > 0) {
         while(rs.next()){ //for each row
-          System.out.println("Location: " + rs.getString(0) +
-                  " City: " + rs.getString(1) +
-                  " vehicle type name :" + rs.getString(2) +
-                  " Count: " + rs.getInt(3) +
-                  " Sum: " + rs.getInt(4));
+          System.out.println("Location: " + rs.getString(1) +
+                  " City: " + rs.getString(2) +
+                  " vehicle type name :" + rs.getString(3) +
+                  " Count: " + rs.getInt(4) +
+                  " Sum: " + rs.getInt(5));
       }
         } else {
+        Util.printWarning("entered else in return report");
         System.out.printf("No returned vehicles for date %s%n", date);
       }
       dbConnectionHandler.getConnection().commit();
