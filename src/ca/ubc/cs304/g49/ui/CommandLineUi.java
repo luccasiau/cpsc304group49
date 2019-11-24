@@ -363,26 +363,39 @@ public class CommandLineUi {
   private void handleDailyReturnsBranch(){}
 
   //Must generate report for any day.
-  private void handleDailyReturns(){
-      Date minDate = Date.valueOf("1990-01-01");
-      Date currDate = Util.genericDateRead(bufferedReader, "Which day would you like to generate Daily Returns for? [yyyy-mm-dd] ", minDate);
+  private void handleDailyReturns() {
+    Date minDate = Date.valueOf("1990-01-01");
+    Date currDate = Util.genericDateRead(bufferedReader, "Which day would you like to generate Daily Returns for? [yyyy-mm-dd] ", minDate);
     ResultSet rs = delegate.generateReturnReport(currDate);
-      try {
-          if(rs.getFetchSize() >0){
-              while(rs.next()){ //for each row
-                  System.out.println("Location: " + rs.getString(0) +
-                          " City: " + rs.getString(1) +
-                          " vehicle type name :" + rs.getString(2) +
-                          " Count: " + rs.getInt(3) +
-                          " Sum: " + rs.getInt(4));
-              }
-          }
-          else {
-              System.out.printf("No returned vehicles for date %s%n", currDate);
-          }
-      } catch (SQLException e) {
-          e.printStackTrace();
+    try {
+      if (rs.getFetchSize() > 0) {
+        while (rs.next()) { //for each row
+          System.out.println("Location: " + rs.getString(0) +
+                  " City: " + rs.getString(1) +
+                  " vehicle type name :" + rs.getString(2) +
+                  " Count: " + rs.getInt(3) +
+                  " Sum: " + rs.getInt(4));
+        }
+      } else {
+        System.out.printf("No returned vehicles for date %s%n", currDate);
       }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+  /**
+   * todo
+   * When returning a vehicle, display a receipt with the necessary details
+   * (reservation confirmation number, date of return, how the total was calculated etc.)
+   * if vehicle wasn't rented, return error.
+   */
+  private void handleReturnVehicle(){
+    VehicleModel vm = new VehicleModel("", "", 0, "", "", "", "");
+    vm.readVehicleInfo(bufferedReader);
+    //if vehicle is rented out, return confNo, date of return, total fees
+
+    System.out.println("o");
+
   }
 
   private void handleQuit() {

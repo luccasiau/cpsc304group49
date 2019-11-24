@@ -5,74 +5,106 @@ import ca.ubc.cs304.g49.util.Util;
 
 import java.io.BufferedReader;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Optional;
 
+/**
+ * Class for handling daily returns.
+ *
+ * This has a readReservationInfo method that facilitates reading input from a
+ * provided BufferedReader.
+ */
 public class ReturnModel {
-    private String rentID;
-    private Date returnDate;
-    private int odometer;
-    private float revenue;
-    private Boolean fullTank;
+    private String confno;
+    private String vtname;
+    private String dlicense;
+    private String location;
+    private String city;
+    private Date startDate;
+    private Date endDate;
+    private ArrayList<VehicleModel> retvehicles; // list of vehicles returned today
 
-    public void readRentID(BufferedReader reader) {
-        rentID = Util.genericStringRead(
+    public void ReturnModel() {
+        vtname = null;
+        dlicense = null;
+        location = null;
+        city = null;
+        startDate = null;
+        endDate = null;
+        confno = Util.randomHash(FieldSizes.MAXIMUM_CONFNO_SIZE);
+    }
+
+    public String getVtname() {
+        return vtname;
+    }
+
+    public String getDlicense() {
+        return dlicense;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public String getConfno() {
+        return confno;
+    }
+
+    public void readReservationInfo(BufferedReader reader) {
+        readDlicense(reader);
+        readVtname(reader);
+        readLocation(reader);
+        readCity(reader);
+        readStartDate(reader);
+        readEndDate(reader);
+    }
+
+    public void readDlicense(BufferedReader reader) {
+        dlicense = Util.genericStringRead(
                 reader,
-                "Enter RentID",
-                FieldSizes.MAXIMUM_RENTID_SIZE,
+                "Enter customer's driver's license number: ",
+                FieldSizes.MAXIMUM_DLICENSE_SIZE,
                 false);
     }
 
-    public void readReturnDate(BufferedReader reader, Date startdate) {
-        returnDate = Util.genericDateRead(
+    private void readVtname(BufferedReader reader) {
+        vtname = Util.genericStringRead(
                 reader,
-                "Enter return date (yyyy-mm-dd): ",
-                startdate);
+                "Enter vehicle type name: ",
+                FieldSizes.MAXIMUM_VTNAME_SIZE,
+                false);
     }
 
-    public void readOdometer(BufferedReader reader) {
-        System.out.print("Enter odometer reading: ");
-        odometer = Util.readInteger(
+    private void readLocation(BufferedReader reader) {
+        location = Util.genericStringRead(
+                reader, "Enter branch location: ", FieldSizes.MAXIMUM_LOCATION_SIZE, false);
+    }
+
+    private void readCity(BufferedReader reader) {
+        city = Util.genericStringRead(
+                reader, "Enter branch city: ", FieldSizes.MAXIMUM_CITY_SIZE, false);
+    }
+
+    private void readStartDate(BufferedReader reader) {
+        startDate = Util.genericDateRead(
                 reader,
-                false)
-                .orElse(1000);
+                "Enter start date (yyyy-mm-dd): ",
+                Date.valueOf("1990-01-01"));
     }
 
-    public void calculateRevenue(VehicleTypeModel vehicleTypeModel, Date startDate, Date returnDate) {
-        long hoursInMS = 1000 * 60 * 60;
-        long daysInMS = hoursInMS * 24;
-        long weeksInMS = daysInMS * 7;
-        long millisecondsElapsed = returnDate.getTime() - startDate.getTime();
-
-        long weeksElapsed = millisecondsElapsed / weeksInMS;
-        millisecondsElapsed = millisecondsElapsed % weeksInMS;
-
-        long daysElapsed = millisecondsElapsed / daysInMS;
-        millisecondsElapsed = millisecondsElapsed % daysInMS;
-
-        long hoursElapsed = millisecondsElapsed / hoursInMS;
-
-        revenue = weeksElapsed * vehicleTypeModel.getWeeklyRate()
-                + weeksElapsed * vehicleTypeModel.getWinsuranceRate()
-                + daysElapsed * vehicleTypeModel.getDayRate()
-                + daysElapsed * vehicleTypeModel.getDinsuranceRate()
-                + hoursElapsed * vehicleTypeModel.getHourRate()
-                + hoursElapsed * vehicleTypeModel.getHinsuranceRate();
+    private void readEndDate(BufferedReader reader) {
+        endDate = Util.genericDateRead(reader, "Enter end date (yyyy-mm-dd): ", startDate);
     }
-
-    public void readFullTank(BufferedReader reader) {
-        System.out.print("Is the tank full? [True] [False] ");
-        fullTank = Util.readBoolean(
-                reader,
-                false)
-                .orElse(Boolean.TRUE);
-    }
-
-    public String getRentID() { return rentID; }
-
-    public Date getReturnDate() { return returnDate; }
-
-    public int getOdometer() { return odometer; }
-
-    public float getRevenue() { return revenue; }
-
-    public boolean isFullTank() { return fullTank; }
 }
