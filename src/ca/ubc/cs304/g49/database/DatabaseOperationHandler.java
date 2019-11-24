@@ -630,13 +630,13 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
       ps.setDate(1, date); //set today date
 
       ResultSet rs = ps.executeQuery();
-      if (rs.getFetchSize() > 0) {
+      if (rs.getRow() != 0) {
         while(rs.next()){ //for each row
           System.out.println("Location: " + rs.getString(1) +
                   " City: " + rs.getString(2) +
-                  " vehicle type name :" + rs.getString(3) +
+                  " vehicle type name:" + rs.getString(3) +
                   " Count: " + rs.getInt(4) +
-                  " Sum: " + rs.getInt(5));
+                  " Total Revenue: " + rs.getInt(5));
       }
         } else {
         Util.printWarning("entered else in return report");
