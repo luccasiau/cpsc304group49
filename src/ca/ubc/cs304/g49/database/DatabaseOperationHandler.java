@@ -530,8 +530,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                   " Total Revenue: " + rs.getInt(5));
       }
         } else {
-        Util.printWarning("entered else in return report");
-        System.out.printf("No returned vehicles for date %s\n", date.toString());
+        System.out.printf("\nNo returned vehicles for date %s\n", date.toString());
       }
       dbConnectionHandler.getConnection().commit();
       rs.close();
