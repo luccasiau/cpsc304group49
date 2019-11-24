@@ -18,7 +18,7 @@ import java.util.Optional;
  * Handles user interaction with CLI.
  */
 public class CommandLineUi {
-  private static final int QUIT_INPUT = 4;  // FIXME: Update this as needed.
+  private static final int QUIT_INPUT = 5;  // FIXME: Update this as needed.
 
   private CommandLineUiDelegate delegate;
   private BufferedReader bufferedReader = null;
@@ -115,7 +115,7 @@ public class CommandLineUi {
     String confno = "";
     if (in.equals("y")) {
       rentModel.readConfno(bufferedReader);
-      while (delegate.confnoExist(rentModel.getConfno())) {
+      while (delegate.fetchReservation(rentModel.getConfno()) == null) {
         System.out.println("Reservation not found. Enter new confirmation number or type \"no\" in case");
         System.out.println("there is no reservation.");
         rentModel.readConfno(bufferedReader);
@@ -127,24 +127,21 @@ public class CommandLineUi {
       }
       confno = rentModel.getConfno();
     }
+
+    ReservationModel reservationModel;
     if (in.equals("n")){
-      confno = handleNewReservation(false);
+      reservationModel = handleNewReservation(false);
+    } else {
+      reservationModel = delegate.fetchReservation(confno);
+    }
+
+    if (reservationModel == null) {
+      Util.printWarning("Failed to make rental.");
+      return;
     }
 
     // Get information from reservation.
-    ReservationModel reservationModel = delegate.fetchReservation(confno);
     rentModel.setFromReservation(reservationModel);
-
-    // FIXME: There's a possible issue here. I am in theory always creating a
-    // new reservation when a rental is made without a prior one. This might
-    // go against the specs or not.
-    // Another issue is that I am creating a new reservation, but setting the
-    // confno in the rental to NULL. However, there is an entry in the table
-    // for reservations with that information.
-    // Two alternative solutions are:
-    //    (i) Refactor this so that we're no longer inserting a new reservation
-    //  to the table.
-    //   (ii) Delete the entry for the reservation after inserting the rental.
 
     // Get a valid single vehicle's license. ASSUMING ONE EXISTS.
     VehicleModel vehicleModel = delegate.fetchVehicleFromTypeAndBranch(
@@ -178,12 +175,12 @@ public class CommandLineUi {
   }
 
   /**
-   * Creates new reservation
-   * @param printInformation
-   * @return reservation confirmation number
+   * Creates new reservation and returns a model to it.
+   * @param addToDb flag representing whether we want to put it in the table.
+   * @return reservation model
    */
-  private String handleNewReservation(boolean printInformation) {
-    if (printInformation) {
+  private ReservationModel handleNewReservation(boolean addToDb) {
+    if (addToDb) {
       System.out.println("\nNew Reservation Form");
     }
     ReservationModel reservationModel = new ReservationModel();
@@ -204,22 +201,44 @@ public class CommandLineUi {
       }
     }
 
+    // System.out.println("DEBUG vehicle count");
+    int vehicleCount = delegate.fetchAvailableVehicles(
+        reservationModel.getVtname(),
+        reservationModel.getLocation(),
+        reservationModel.getStartDate(),
+        reservationModel.getEndDate()).size();
+    // System.out.println("DEBUG vehicle count is " + vehicleCount);
+    int busyCount = delegate.countActiveRentalsAndReservations(
+        reservationModel.getVtname(),
+        reservationModel.getLocation(),
+        reservationModel.getCity(),
+        reservationModel.getStartDate(),
+        reservationModel.getEndDate());
+    // System.out.println("DEBUG busy count is " + busyCount);
+
+    if (busyCount >= vehicleCount) {
+      System.out.println("No vehicles of that type available for those dates and branch. Sorry :(");
+      return null;
+    }
+
+    if (!addToDb) {
+      return reservationModel;
+    }
+
     if (delegate.insertReservation(reservationModel)) {
-      if (printInformation) {
-        System.out.println("\nReservation successfully created!");
-        System.out.printf("Confirmation number: %s%n", reservationModel.getConfno());
-        System.out.printf(
-            "Customer's Driver's License: %s%n", reservationModel.getDlicense());
-        System.out.printf("Vehicle Type: %s%n", reservationModel.getVtname());
-        System.out.printf("Branch location: %s%n", reservationModel.getLocation());
-        System.out.printf("Branch city: %s%n", reservationModel.getCity());
-        System.out.printf("Start date: %s%n", reservationModel.getStartDate().toString());
-        System.out.printf("End date: %s%n", reservationModel.getEndDate().toString());
-      }
-      return reservationModel.getConfno();
+      System.out.println("\nReservation successfully created!");
+      System.out.printf("Confirmation number: %s%n", reservationModel.getConfno());
+      System.out.printf(
+          "Customer's Driver's License: %s%n", reservationModel.getDlicense());
+      System.out.printf("Vehicle Type: %s%n", reservationModel.getVtname());
+      System.out.printf("Branch location: %s%n", reservationModel.getLocation());
+      System.out.printf("Branch city: %s%n", reservationModel.getCity());
+      System.out.printf("Start date: %s%n", reservationModel.getStartDate().toString());
+      System.out.printf("End date: %s%n", reservationModel.getEndDate().toString());
+      return reservationModel;
     } else {
       Util.printWarning("Reservation registration failed!");
-      return "";
+      return null;
     }
   }
 
@@ -241,15 +260,15 @@ public class CommandLineUi {
     VehicleModel vm = new VehicleModel("", "", 0, "", "", "", "");
     vm.readVehicleInfo(bufferedReader);
     ArrayList<VehicleModel> availVehicles = delegate.fetchAvailableVehicles(vm.getVtname(), vm.getLocation(), vm.getstartDate(), vm.getEndDate());
-  int numVehicles = availVehicles.size();
+    int numVehicles = availVehicles.size();
     if(numVehicles > 0){
       System.out.printf("Currently: %d available vehicles%n", numVehicles);
       //check if they want to see the vehicles
       String response = Util.genericStringRead(
-              bufferedReader,
-              String.format("Would you like to see the %d ? [y/n]", numVehicles),
-              FieldSizes.MAXIMUM_VTNAME_SIZE,
-              false);
+          bufferedReader,
+          String.format("Would you like to see the %d ? [y/n]", numVehicles),
+          FieldSizes.MAXIMUM_VTNAME_SIZE,
+          false);
 
       if(response.toLowerCase().equals("y") || response.toLowerCase().equals("yes")){
         for(VehicleModel availableVehicles : availVehicles){
