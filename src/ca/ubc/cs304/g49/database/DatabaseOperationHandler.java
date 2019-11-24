@@ -507,7 +507,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
    * returns list of vehicles that were returned today
    * by getting list of vid of rentals that ended today
    */
-  public ResultSet generateReturnReport(Date date){
+  public void generateReturnReport(Date date){
 //    String date = new java.sql.Date(Calendar.getInstance().getTime().getTime()).toString();
     try {
         //Grouping by branch & vehicle type
@@ -522,24 +522,24 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
       ps.setDate(2, date);
 
       ResultSet rs = ps.executeQuery();
-      while(rs.next()){ //for each row
+      if (rs.getFetchSize() > 0) {
+        while(rs.next()){ //for each row
           System.out.println("Location: " + rs.getString(0) +
                   " City: " + rs.getString(1) +
                   " vehicle type name :" + rs.getString(2) +
                   " Count: " + rs.getInt(3) +
                   " Sum: " + rs.getInt(4));
       }
-
+        } else {
+        System.out.printf("No returned vehicles for date %s%n", date);
+      }
       dbConnectionHandler.getConnection().commit();
       rs.close();
       ps.close();
-      return rs;
-
     } catch (Exception e){
       dbConnectionHandler.rollbackConnection();
       Util.printException(e.getMessage());
     }
-    return null;
   }
 
 
