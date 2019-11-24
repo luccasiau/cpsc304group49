@@ -93,9 +93,6 @@ public class CommandLineUi {
           case 4:
             handleAvailableVehicles();
             break;
-          case 5:
-              handleReturnVehicle();
-              break;
           case 6:
             handleDailyRentals();
             break;
@@ -339,22 +336,6 @@ public class CommandLineUi {
     } else {
       Util.printWarning("Vehicle return failed.");
     }
-  }
-
-
-  /**
-   * todo
-   * When returning a vehicle, display a receipt with the necessary details
-   * (reservation confirmation number, date of return, how the total was calculated etc.)
-   * if vehicle wasn't rented, return error.
-   */
-  private void handleReturnVehicle(){
-    VehicleModel vm = new VehicleModel("", "", 0, "", "", "", "");
-    vm.readVehicleInfo(bufferedReader);
-    //if vehicle is rented out, return confNo, date of return, total fees
-
-    System.out.println("o");
-
   }
 
   //New rentals within that day
