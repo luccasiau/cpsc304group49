@@ -16,7 +16,7 @@ import java.util.Optional;
  * Handles user interaction with CLI.
  */
 public class CommandLineUi {
-  private static final int QUIT_INPUT = 5;  // FIXME: Update this as needed.
+  private static final int QUIT_INPUT = 6;  // FIXME: Update this as needed.
 
   private CommandLineUiDelegate delegate;
   private BufferedReader bufferedReader = null;
