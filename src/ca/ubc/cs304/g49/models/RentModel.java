@@ -31,6 +31,26 @@ public class RentModel {
     rentid = Util.randomHash(FieldSizes.MAXIMUM_RENTID_SIZE);
   }
 
+  public RentModel(String rentid,
+                   String vlicense,
+                   String dlicense,
+                   String confno,
+                   Date startdate,
+                   Date enddate,
+                   String cardname,
+                   String cardno,
+                   int expdate) {
+    this.rentid = rentid;
+    this.vlicense = vlicense;
+    this.dlicense = dlicense;
+    this.confno = confno;
+    this.startdate = startdate;
+    this.enddate = enddate;
+    this.cardname = cardname;
+    this.cardno = cardno;
+    this.expdate = expdate;
+  }
+
   public void readConfno(BufferedReader reader) {
     confno = Util.genericStringRead(
         reader,

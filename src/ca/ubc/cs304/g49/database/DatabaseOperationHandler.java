@@ -1,10 +1,7 @@
 package ca.ubc.cs304.g49.database;
 
 import ca.ubc.cs304.g49.delegates.CommandLineUiDelegate;
-import ca.ubc.cs304.g49.models.CustomerModel;
-import ca.ubc.cs304.g49.models.RentModel;
-import ca.ubc.cs304.g49.models.ReservationModel;
-import ca.ubc.cs304.g49.models.VehicleModel;
+import ca.ubc.cs304.g49.models.*;
 import ca.ubc.cs304.g49.util.Util;
 
 import java.sql.*;
@@ -105,6 +102,29 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
   }
 
   @Override
+  public boolean insertReturn(ReturnModel returnModel) {
+    try {
+      PreparedStatement ps = dbConnectionHandler.getConnection()
+              .prepareStatement("INSERT INTO return VALUES (?, ?, ?, ?, ?)");
+      ps.setString(1, returnModel.getRentID());
+      ps.setDate(2, returnModel.getReturnDate());
+      ps.setInt(3, returnModel.getOdometer());
+      ps.setBoolean(4, returnModel.isFullTank());
+      ps.setFloat(5, returnModel.getRevenue());
+
+      ps.executeUpdate();
+      dbConnectionHandler.getConnection().commit();
+      ps.close();
+
+      return true;
+    } catch (SQLException e) {
+      dbConnectionHandler.rollbackConnection();
+      Util.printException(e.getMessage());
+      return false;
+    }
+  }
+
+  @Override
   public boolean dlicenseExist(String dlicense) {
     try {
       PreparedStatement ps = dbConnectionHandler.getConnection()
@@ -171,6 +191,30 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
   }
 
   @Override
+  public boolean updateVehicleOdometer(String vlicense, int odometer) {
+    try {
+      PreparedStatement ps = dbConnectionHandler.getConnection()
+              .prepareStatement("UPDATE vehicle SET odometer = ? WHERE vlicense = ?");
+      ps.setInt(1, odometer);
+      ps.setString(2, vlicense);
+
+      int rowCount = ps.executeUpdate();
+      if (rowCount == 0) {
+        Util.printWarning(
+                String.format("Vehicle with license %s does not exist!", vlicense));
+      }
+
+      dbConnectionHandler.getConnection().commit();
+      ps.close();
+      return true;
+    } catch (SQLException e) {
+      dbConnectionHandler.rollbackConnection();
+      Util.printException(e.getMessage());
+      return false;
+    }
+  }
+
+  @Override
   public ReservationModel fetchReservation(String confno) {
     try {
       PreparedStatement ps = dbConnectionHandler.getConnection()
@@ -195,6 +239,71 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
       rs.close();
       ps.close();
       return reservationModel;
+    } catch (SQLException e) {
+      dbConnectionHandler.rollbackConnection();
+      Util.printException(e.getMessage());
+      return null;
+    }
+  }
+
+  @Override
+  public RentModel fetchRental(String rentId) {
+    try {
+      PreparedStatement ps = dbConnectionHandler.getConnection()
+              .prepareStatement("SELECT * FROM rental WHERE rentid = ?");
+      ps.setString(1, rentId);
+
+      ResultSet rs = ps.executeQuery();
+
+      RentModel rentModel = null;
+      if (rs.next()) {
+        rentModel = new RentModel(
+                rs.getString("rentid"),
+                rs.getString("vlicense"),
+                rs.getString("dlicense"),
+                rs.getString("confno"),
+                rs.getDate("startdate"),
+                rs.getDate("enddate"),
+                rs.getString("cardname"),
+                rs.getString("cardno"),
+                rs.getInt("expdate"));
+      }
+      rs.close();
+      ps.close();
+      return rentModel;
+    } catch (SQLException e) {
+      dbConnectionHandler.rollbackConnection();
+      Util.printException(e.getMessage());
+      return null;
+    }
+  }
+
+  @Override
+  public VehicleTypeModel fetchVehicleType(String vtname) {
+    try {
+      PreparedStatement ps = dbConnectionHandler.getConnection()
+              .prepareStatement("SELECT * FROM vehicletype WHERE vtname = ?");
+      ps.setString(1, vtname);
+
+      ResultSet rs = ps.executeQuery();
+
+      VehicleTypeModel vehicleTypeModel = null;
+      if (rs.next()) {
+        vehicleTypeModel = new VehicleTypeModel(
+                rs.getString("vtname"),
+                rs.getString("features"),
+                rs.getFloat("weeklyRate"),
+                rs.getFloat("dayRate"),
+                rs.getFloat("hourRate"),
+                rs.getFloat("kiloRate"),
+                rs.getFloat("winsuranceRate"),
+                rs.getFloat("hinsuranceRate"),
+                rs.getFloat("dinsuranceRate"));
+      }
+
+      rs.close();
+      ps.close();
+      return vehicleTypeModel;
     } catch (SQLException e) {
       dbConnectionHandler.rollbackConnection();
       Util.printException(e.getMessage());

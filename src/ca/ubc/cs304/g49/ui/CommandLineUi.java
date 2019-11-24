@@ -2,13 +2,11 @@ package ca.ubc.cs304.g49.ui;
 
 import ca.ubc.cs304.g49.database.DatabaseConnectionHandler;
 import ca.ubc.cs304.g49.delegates.CommandLineUiDelegate;
-import ca.ubc.cs304.g49.models.CustomerModel;
-import ca.ubc.cs304.g49.models.RentModel;
-import ca.ubc.cs304.g49.models.ReservationModel;
-import ca.ubc.cs304.g49.models.VehicleModel;
+import ca.ubc.cs304.g49.models.*;
 import ca.ubc.cs304.g49.util.FieldSizes;
 import ca.ubc.cs304.g49.util.Util;
 
+import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -68,7 +66,8 @@ public class CommandLineUi {
       System.out.println("2. [Customer] Make new reservation.");
       System.out.println("3. [Clerk] Make new rental.");
       System.out.println("4. [Customer] View number of available vehicles");
-      System.out.println("5. Quit.");
+      System.out.println("5. [Clerk] Return a vehicle.");
+      System.out.println("6. Quit.");
       System.out.print("Please choose one of the above options: ");
 
       inputOptional = Util.readInteger(bufferedReader, false);
@@ -88,6 +87,9 @@ public class CommandLineUi {
             handleAvailableVehicles();
             break;
           case 5:
+            handleReturn();
+            break;
+          case 6:
             handleQuit();
             break;
           default:
@@ -255,7 +257,7 @@ public class CommandLineUi {
     }
   }
 
-  private void handleAvailableVehicles(){
+  private void handleAvailableVehicles() {
     //create empty model
     VehicleModel vm = new VehicleModel("", "", 0, "", "", "", "");
     vm.readVehicleInfo(bufferedReader);
@@ -281,9 +283,43 @@ public class CommandLineUi {
     } else {
       System.out.println("No available vehicles.");
     }
-
-
   }
+
+  private void handleReturn() {
+    ReturnModel returnModel = new ReturnModel();
+
+    returnModel.readRentID(bufferedReader);
+    RentModel rentalModel = delegate.fetchRental(returnModel.getRentID());
+    if (rentalModel == null) {
+      Util.printWarning("The rentID you entered was not found. Only rented vehicles can be returned.\n");
+      return;
+    }
+
+    // return date should at least be later than the start date
+    returnModel.readReturnDate(bufferedReader, rentalModel.getStartdate());
+    // technically should be >= odometer of vehicle at start time of rental
+    returnModel.readOdometer(bufferedReader);
+    returnModel.readFullTank(bufferedReader);
+    VehicleTypeModel vehicleTypeModel = delegate.fetchVehicleType(rentalModel.getVtname());
+    if (vehicleTypeModel == null) {
+      vehicleTypeModel = new VehicleTypeModel("SUV", "AC", 7.0f, 1.0f,
+              0.2f, 0.1f, 5.0f, 1.0f, 0.1f);
+    }
+    returnModel.calculateRevenue(vehicleTypeModel, rentalModel.getStartdate(), returnModel.getReturnDate());
+
+    // Insert into database.
+    if (delegate.insertReturn(returnModel)) {
+      while (!delegate.updateVehicleOdometer(rentalModel.getVlicense(), returnModel.getOdometer()));
+      while (!delegate.updateVehicleStatus(rentalModel.getVlicense(), "A"));
+      System.out.println("\nReturn Successful!");
+      System.out.printf("Reservation confirmation number: %s%n", rentalModel.getRentid());
+      System.out.printf("Date of Return: %s%n",returnModel.getReturnDate());
+      System.out.printf("Total cost for rental: %s%n", returnModel.getRevenue());
+    } else {
+      Util.printWarning("Vehicle return failed.");
+    }
+  }
+
   private void handleQuit() {
     // TODO
     System.out.println("\n\nQuitting now. Bye!\n");

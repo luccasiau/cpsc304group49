@@ -42,6 +42,22 @@ public class Util {
     return ret;
   }
 
+  public static Optional<Boolean> readBoolean(BufferedReader reader, boolean allowEmpty) {
+    String line = null;
+    Optional<Boolean> ret = Optional.empty();
+    try {
+      line = reader.readLine();
+      ret = Optional.of(Boolean.parseBoolean(line));
+    } catch (IOException e) {
+      printException(e.getMessage());
+    } catch (NumberFormatException e) {
+      if (allowEmpty && line.length() == 0) ret = Optional.of(Boolean.TRUE);
+      else printException(e.getMessage());
+    }
+
+    return ret;
+  }
+
   public static Optional<String> readString(BufferedReader reader, int maxSize, boolean allowEmpty) {
     String line = null;
 
