@@ -515,7 +515,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
               .prepareStatement(
                       "SELECT V.location, V.city, V.vtname, count(*), sum(R2.revenue) " +
                               "FROM Rent R, Vehicle V, Return R2 " +
-                              "WHERE R2.rentId = R.rentId AND R2.returnDate = ? " +
+                              "WHERE R2.rentId = R.rentId AND R2.returnDate = ? AND R.vlicense = V.vlicense " +
                               "GROUP BY V.location, V.city, V.vtname "
                               );
       ps.setDate(1, date); //set today date
