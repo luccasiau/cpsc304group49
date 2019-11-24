@@ -181,6 +181,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
 
       ReservationModel reservationModel = null;
       if (rs.next()) {
+        // System.out.println("DEBUG: Found something!");
         reservationModel = new ReservationModel(
             rs.getString("confno"),
             rs.getString("vtname"),
@@ -249,6 +250,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                       "SELECT * FROM vehicle " +
                               "WHERE vtname = ?" +
                               "   AND location = ?");
+      // FIXME: Add city to this query.
       ps.setString(1, vtname);
       ps.setString(2, location);
 //      ps.setDate(3, start);
@@ -280,4 +282,112 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
     return result;
   }
 
+  /**
+   * Counts the number of current reservations that intersect the time period
+   * defined by [start, end] for that current location & city.
+   */
+  @Override
+  public int countActiveReservations(String vtname, String location, String city, Date start, Date end) {
+    try {
+      PreparedStatement ps = dbConnectionHandler.getConnection()
+          .prepareStatement(
+              "SELECT COUNT(*) AS num FROM reservation" +
+                   " WHERE location = ? " +
+                   " AND   city = ? " +
+                   " AND   vtname = ? " +
+                   " AND ( " +
+                   "     (startdate >= ? AND startdate <= ?) " +
+                   "     OR " +
+                   "     (enddate >= ? AND enddate <= ?) " +
+                   "     OR " +
+                   "     (enddate >= ? AND startdate <= ?))");
+      ps.setString(1, location);
+      ps.setString(2, city);
+      ps.setString(3, vtname);
+      ps.setDate(4, start);
+      ps.setDate(5, end);
+      ps.setDate(6, start);
+      ps.setDate(7, end);
+      ps.setDate(8, end);
+      ps.setDate(9, start);
+
+      // System.out.println("DEBUG: " + ps);
+
+      ResultSet rs = ps.executeQuery();
+
+      int cnt = 0;
+      if (rs.next()) {
+        cnt = rs.getInt("num");
+      }
+
+      dbConnectionHandler.getConnection().commit();
+      rs.close();
+      ps.close();
+
+      // System.out.println("DEBUG. Resevation About to return: " + cnt);
+      return cnt;
+    } catch (Exception e) {
+      dbConnectionHandler.rollbackConnection();
+      Util.printException("Reservation:" + e.getMessage());
+      return 0;
+    }
+  }
+
+  /**
+   * Count number of rentals made for that type, date, and branch that
+   * did not have any reservation confirmation number.
+   */
+  @Override
+  public int countActiveRentalsNoConf(String vtname, String location, String city, Date start, Date end) {
+    try {
+      PreparedStatement ps = dbConnectionHandler.getConnection()
+          .prepareStatement(
+              "SELECT COUNT(*) as num FROM rent R, vehicle V" +
+                   " WHERE R.vlicense = V.vlicense " +
+                   " AND R.confno IS NULL " +
+                   " AND   V.location = ? " +
+                   " AND   V.city = ? " +
+                   " AND   V.vtname = ? " +
+                   " AND ( " +
+                   "      (R.startdate >= ? AND R.startdate <= ?) " +
+                   "      OR " +
+                   "      (R.enddate >= ? AND R.enddate <= ?) " +
+                   "      OR " +
+                   "      (R.enddate >= ? AND R.startdate <= ?))");
+      ps.setString(1, location);
+      ps.setString(2, city);
+      ps.setString(3, vtname);
+      ps.setDate(4, start);
+      ps.setDate(5, end);
+      ps.setDate(6, start);
+      ps.setDate(7, end);
+      ps.setDate(8, end);
+      ps.setDate(9, start);
+
+      ResultSet rs = ps.executeQuery();
+
+      int cnt = 0;
+      if (rs.next()) {
+        cnt = rs.getInt("num");
+      }
+
+      dbConnectionHandler.getConnection().commit();
+      rs.close();
+      ps.close();
+
+      // System.out.println("DEBUG. Rent about to return: " + cnt);
+      return cnt;
+    } catch (Exception e) {
+      dbConnectionHandler.rollbackConnection();
+      Util.printException("Rental: " + e.getMessage());
+      return 0;
+    }
+  }
+
+  @Override
+  public int countActiveRentalsAndReservations(
+      String vtname, String location, String city, Date start, Date end) {
+    return countActiveRentalsNoConf(vtname, location, city, start, end) +
+        countActiveReservations(vtname, location, city, start, end);
+  }
 }
