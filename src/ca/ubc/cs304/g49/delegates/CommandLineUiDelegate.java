@@ -31,6 +31,5 @@ public interface CommandLineUiDelegate {
       String vtname, String location, String city);
   int countActiveRentalsAndReservations(
       String vtname, String location, String city, Date start, Date end);
-  ResultSet generateReturnReport(Date curr);
-
+  void generateReturnReport(Date curr);
 }
