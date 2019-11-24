@@ -383,20 +383,6 @@ public class CommandLineUi {
       e.printStackTrace();
     }
   }
-  /**
-   * todo
-   * When returning a vehicle, display a receipt with the necessary details
-   * (reservation confirmation number, date of return, how the total was calculated etc.)
-   * if vehicle wasn't rented, return error.
-   */
-  private void handleReturnVehicle(){
-    VehicleModel vm = new VehicleModel("", "", 0, "", "", "", "");
-    vm.readVehicleInfo(bufferedReader);
-    //if vehicle is rented out, return confNo, date of return, total fees
-
-    System.out.println("o");
-
-  }
 
   private void handleQuit() {
     // TODO
