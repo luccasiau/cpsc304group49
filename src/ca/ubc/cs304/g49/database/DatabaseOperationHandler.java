@@ -279,6 +279,39 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
   }
 
   @Override
+  public VehicleTypeModel fetchVehicleType(String vtname) {
+    try {
+      PreparedStatement ps = dbConnectionHandler.getConnection()
+              .prepareStatement("SELECT * FROM vehicletype WHERE vtname = ?");
+      ps.setString(1, vtname);
+
+      ResultSet rs = ps.executeQuery();
+
+      VehicleTypeModel vehicleTypeModel = null;
+      if (rs.next()) {
+        vehicleTypeModel = new VehicleTypeModel(
+                rs.getString("vtname"),
+                rs.getString("features"),
+                rs.getFloat("weeklyRate"),
+                rs.getFloat("dayRate"),
+                rs.getFloat("hourRate"),
+                rs.getFloat("kiloRate"),
+                rs.getFloat("winsuranceRate"),
+                rs.getFloat("hinsuranceRate"),
+                rs.getFloat("dinsuranceRate"));
+      }
+
+      rs.close();
+      ps.close();
+      return vehicleTypeModel;
+    } catch (SQLException e) {
+      dbConnectionHandler.rollbackConnection();
+      Util.printException(e.getMessage());
+      return null;
+    }
+  }
+
+  @Override
   public VehicleModel fetchVehicleFromTypeAndBranch(String vtname, String location, String city) {
     try {
       PreparedStatement ps = dbConnectionHandler.getConnection()

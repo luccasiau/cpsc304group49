@@ -36,8 +36,26 @@ public class ReturnModel {
                 .orElse(1000);
     }
 
-    public void calculateRevenue(String vtname) {
-        // TODO
+    public void calculateRevenue(VehicleTypeModel vehicleTypeModel, Date startDate, Date returnDate) {
+        long hoursInMS = 1000 * 60 * 60;
+        long daysInMS = hoursInMS * 24;
+        long weeksInMS = daysInMS * 7;
+        long millisecondsElapsed = returnDate.getTime() - startDate.getTime();
+
+        long weeksElapsed = millisecondsElapsed / weeksInMS;
+        millisecondsElapsed = millisecondsElapsed % weeksInMS;
+
+        long daysElapsed = millisecondsElapsed / daysInMS;
+        millisecondsElapsed = millisecondsElapsed % daysInMS;
+
+        long hoursElapsed = millisecondsElapsed / hoursInMS;
+
+        revenue = weeksElapsed * vehicleTypeModel.getWeeklyRate()
+                + weeksElapsed * vehicleTypeModel.getWinsuranceRate()
+                + daysElapsed * vehicleTypeModel.getDayRate()
+                + daysElapsed * vehicleTypeModel.getDinsuranceRate()
+                + hoursElapsed * vehicleTypeModel.getHourRate()
+                + hoursElapsed * vehicleTypeModel.getHinsuranceRate();
     }
 
     public void readFullTank(BufferedReader reader) {

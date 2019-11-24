@@ -300,7 +300,12 @@ public class CommandLineUi {
     // technically should be >= odometer of vehicle at start time of rental
     returnModel.readOdometer(bufferedReader);
     returnModel.readFullTank(bufferedReader);
-    returnModel.calculateRevenue(rentalModel.getVtname());
+    VehicleTypeModel vehicleTypeModel = delegate.fetchVehicleType(rentalModel.getVtname());
+    if (vehicleTypeModel == null) {
+      vehicleTypeModel = new VehicleTypeModel("SUV", "AC", 7.0f, 1.0f,
+              0.2f, 0.1f, 5.0f, 1.0f, 0.1f);
+    }
+    returnModel.calculateRevenue(vehicleTypeModel, rentalModel.getStartdate(), returnModel.getReturnDate());
 
     // Insert into database.
     if (delegate.insertReturn(returnModel)) {

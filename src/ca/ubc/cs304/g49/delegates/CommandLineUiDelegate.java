@@ -21,6 +21,7 @@ public interface CommandLineUiDelegate {
   boolean updateVehicleOdometer(String vlicense, int odometer);
   ReservationModel fetchReservation(String confno);
   RentModel fetchRental(String rentId);
+  VehicleTypeModel fetchVehicleType(String vtname);
   VehicleModel fetchVehicleFromTypeAndBranch(String vtname, String location, String city);
   ArrayList<VehicleModel>  fetchAvailableVehicles(
       String vtname, String location, Date start, Date End);
