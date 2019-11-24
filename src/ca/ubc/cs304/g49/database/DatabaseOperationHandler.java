@@ -513,10 +513,10 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
         //Grouping by branch & vehicle type
       PreparedStatement ps = dbConnectionHandler.getConnection()
               .prepareStatement(
-                      "SELECT R.location, R.city, V.vtname, count(*), sum(value) " +
+                      "SELECT V.location, V.city, V.vtname, count(*), sum(value) " +
                               "FROM Rent R, Vehicle V, Return R2 " +
                               "WHERE R2.rentId = R.rentId AND R2.returnDate BETWEEN ? AND ? " +
-                              "GROUP BY R.location, R.city, V.vtname "
+                              "GROUP BY R2.location, R2.city, V.vtname "
                               );
       ps.setDate(1, date); //set today date
       ps.setDate(2, date);
