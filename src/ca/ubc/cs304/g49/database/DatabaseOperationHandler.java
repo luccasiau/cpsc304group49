@@ -640,7 +640,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
       }
         } else {
         Util.printWarning("entered else in return report");
-        System.out.printf("No returned vehicles for date %s%n", date);
+        System.out.printf("No returned vehicles for date %s\n", date.toString());
       }
       dbConnectionHandler.getConnection().commit();
       rs.close();
