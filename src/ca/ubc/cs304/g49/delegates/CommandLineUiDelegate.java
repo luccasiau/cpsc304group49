@@ -24,9 +24,7 @@ public interface CommandLineUiDelegate {
   VehicleTypeModel fetchVehicleType(String vtname);
   VehicleModel fetchVehicleFromTypeAndBranch(String vtname, String location, String city);
   ArrayList<VehicleModel>  fetchAvailableVehicles(
-      String vtname, String location, Date start, Date End);
-  int countActiveReservations(String vtname, String location, String city, Date start, Date end);
-  int countActiveRentalsNoConf(String vtname, String location, String city, Date start, Date end);
+      String vtname, String location, String city);
   int countActiveRentalsAndReservations(
       String vtname, String location, String city, Date start, Date end);
 }

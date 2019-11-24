@@ -69,7 +69,7 @@ public class VehicleModel {
     return city;
   }
 
-  public Date getstartDate(){
+  public Date getStartDate(){
     return start;
   }
 
@@ -79,14 +79,19 @@ public class VehicleModel {
   public void readVehicleInfo(BufferedReader reader) {
      vtname = Util.genericStringRead(
             reader,
-            "Enter car type's name, must be one of: [SUV] [Sedan] [Crossover] [Coupe] [Convertible]",
+            "Enter car type's name, must be one of [SUV] [Sedan] [Crossover] [Coupe] [Convertible]: ",
             FieldSizes.MAXIMUM_VTNAME_SIZE,
-            true);
+            false);
      location = Util.genericStringRead(
             reader,
             "Enter location: ",
+            FieldSizes.MAXIMUM_LOCATION_SIZE,
+            false);
+     city = Util.genericStringRead(
+            reader,
+            "Enter branch city: ",
             FieldSizes.MAXIMUM_CITY_SIZE,
-            true);
+            false);
      start = Util.genericDateRead(
             reader,
             "Enter start date (yyyy-mm-dd): ",

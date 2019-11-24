@@ -207,8 +207,7 @@ public class CommandLineUi {
     int vehicleCount = delegate.fetchAvailableVehicles(
         reservationModel.getVtname(),
         reservationModel.getLocation(),
-        reservationModel.getStartDate(),
-        reservationModel.getEndDate()).size();
+        reservationModel.getCity()).size();
     // System.out.println("DEBUG vehicle count is " + vehicleCount);
     int busyCount = delegate.countActiveRentalsAndReservations(
         reservationModel.getVtname(),
@@ -261,20 +260,36 @@ public class CommandLineUi {
     //create empty model
     VehicleModel vm = new VehicleModel("", "", 0, "", "", "", "");
     vm.readVehicleInfo(bufferedReader);
-    ArrayList<VehicleModel> availVehicles = delegate.fetchAvailableVehicles(vm.getVtname(), vm.getLocation(), vm.getstartDate(), vm.getEndDate());
+
+    // FIXME: Add city
+    ArrayList<VehicleModel> availVehicles = delegate.fetchAvailableVehicles(
+        vm.getVtname(), vm.getLocation(), vm.getCity());
+
+    // Removing excess vehicles.
+    int toRemove = delegate.countActiveRentalsAndReservations(
+        vm.getVtname(), vm.getLocation(), vm.getCity(), vm.getStartDate(), vm.getEndDate());
+
+    while (availVehicles.size() > 0 && toRemove > 0) {
+      toRemove--;
+      availVehicles.remove(availVehicles.size() - 1);
+    }
+
     int numVehicles = availVehicles.size();
     if(numVehicles > 0){
       System.out.printf("Currently: %d available vehicles%n", numVehicles);
       //check if they want to see the vehicles
       String response = Util.genericStringRead(
           bufferedReader,
-          String.format("Would you like to see the %d ? [y/n]", numVehicles),
+          String.format("Would you like to see the %d vehicles? [y/n] ", numVehicles),
           FieldSizes.MAXIMUM_VTNAME_SIZE,
           false);
 
-      if(response.toLowerCase().equals("y") || response.toLowerCase().equals("yes")){
+      if(response.toLowerCase().equals("y") || response.toLowerCase().equals("yes")) {
         for(VehicleModel availableVehicles : availVehicles){
-          System.out.println("vehicle license: " + availableVehicles.getVlicense() + " at: " + availableVehicles.getLocation() + " type: " + availableVehicles.getVtname());
+          System.out.println(
+              "vehicle license: " + availableVehicles.getVlicense() +
+              " at: " + availableVehicles.getLocation() +
+              " type: " + availableVehicles.getVtname());
         }
       } else {
         System.out.println("Okay bye.");
