@@ -499,4 +499,46 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
     return countActiveRentalsNoConf(vtname, location, city, start, end) +
         countActiveReservations(vtname, location, city, start, end);
   }
+  @Override
+  /**
+   * @param void
+   * returns list of vehicles that were returned today
+   * by getting list of vid of rentals that ended today
+   */
+  public ArrayList<VehicleModel> fetchReturnedVehicles(){
+    ArrayList<VehicleModel> result = new ArrayList<>();
+    String date = new java.sql.Date(Calendar.getInstance().getTime().getTime()).toString();
+    try {
+      PreparedStatement ps = dbConnectionHandler.getConnection()
+              .prepareStatement(
+                      "SELECT * FROM vehicle " +
+                              "WHERE vid EXISTS IN (SELECT * FROM rent WHERE toDate = ?"
+                              );
+      ps.setString(1, date); //set today date
+
+      ResultSet rs = ps.executeQuery();
+
+      while(rs.next()){
+        VehicleModel newVehicle =  new VehicleModel(rs.getString("vlicense"),
+                rs.getString("vtname"),
+                rs.getInt("odometer"),
+                rs.getString("status"),
+                rs.getString("colour"),
+                rs.getString("location"),
+                rs.getString("city"));
+        result.add(newVehicle);
+      }
+
+      dbConnectionHandler.getConnection().commit();
+      rs.close();
+      ps.close();
+
+    } catch (Exception e){
+      dbConnectionHandler.rollbackConnection();
+      Util.printException(e.getMessage());
+    }
+    return result;
+  }
+
+
 }
