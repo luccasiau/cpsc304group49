@@ -707,7 +707,6 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
 //    String date = new java.sql.Date(Calendar.getInstance().getTime().getTime()).toString();
     HashSet<ReportModel>reports = new HashSet<ReportModel>();
     try {
-        //Grouping by branch & vehicle type
       PreparedStatement ps = dbConnectionHandler.getConnection()
               .prepareStatement(
                       "SELECT V.location, V.city, V.vtname, count(*), sum(R2.revenue) " +
