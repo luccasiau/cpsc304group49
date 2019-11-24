@@ -103,6 +103,23 @@ public class Util {
     }
   }
 
+  public static Integer genericIntegerRead(BufferedReader reader, String message, boolean allowEmpty, int minValue) {
+    while (true) {
+      System.out.print(message);
+      Integer integer = readInteger(
+                reader,
+                false)
+                .orElse(1000);
+
+      if (integer < minValue) {
+        Util.printWarning("Odometer reading at time of return cannot be less than odometer at time of rental");
+        continue;
+      }
+
+      return integer;
+    }
+  }
+
   public static Date genericDateRead(
       BufferedReader reader, String message, Date minDate) {
     while (true) {

@@ -215,6 +215,54 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
   }
 
   @Override
+  public boolean updateReservationReturnDate(String confno, Date returnDate) {
+    try {
+      PreparedStatement ps = dbConnectionHandler.getConnection()
+              .prepareStatement("UPDATE reservation SET enddate = ? WHERE confno = ?");
+      ps.setDate(1, returnDate);
+      ps.setString(2, confno);
+
+      int rowCount = ps.executeUpdate();
+      if (rowCount == 0) {
+        Util.printWarning(
+                String.format("Reservation with confno %s does not exist!", confno));
+      }
+
+      dbConnectionHandler.getConnection().commit();
+      ps.close();
+      return true;
+    } catch (SQLException e) {
+      dbConnectionHandler.rollbackConnection();
+      Util.printException(e.getMessage());
+      return false;
+    }
+  }
+
+  @Override
+  public boolean updateRentalReturnDate(String rentID, Date returnDate) {
+    try {
+      PreparedStatement ps = dbConnectionHandler.getConnection()
+              .prepareStatement("UPDATE rent SET enddate = ? WHERE rentid = ?");
+      ps.setDate(1, returnDate);
+      ps.setString(2, rentID);
+
+      int rowCount = ps.executeUpdate();
+      if (rowCount == 0) {
+        Util.printWarning(
+                String.format("Rental with rentID %s does not exist!", rentID));
+      }
+
+      dbConnectionHandler.getConnection().commit();
+      ps.close();
+      return true;
+    } catch (SQLException e) {
+      dbConnectionHandler.rollbackConnection();
+      Util.printException(e.getMessage());
+      return false;
+    }
+  }
+
+  @Override
   public ReservationModel fetchReservation(String confno) {
     try {
       PreparedStatement ps = dbConnectionHandler.getConnection()
@@ -279,6 +327,34 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
   }
 
   @Override
+  public ReturnModel fetchReturn(String rentId) {
+    try {
+      PreparedStatement ps = dbConnectionHandler.getConnection()
+              .prepareStatement("SELECT * FROM return WHERE rentid = ?");
+      ps.setString(1, rentId);
+
+      ResultSet rs = ps.executeQuery();
+
+      ReturnModel returnModel = null;
+      if (rs.next()) {
+        returnModel = new ReturnModel(
+                rs.getString("rentid"),
+                rs.getDate("returnDate"),
+                rs.getInt("odometer"),
+                rs.getFloat("revenue"),
+                rs.getBoolean("fullTank"));
+      }
+      rs.close();
+      ps.close();
+      return returnModel;
+    } catch (SQLException e) {
+      dbConnectionHandler.rollbackConnection();
+      Util.printException(e.getMessage());
+      return null;
+    }
+  }
+
+  @Override
   public VehicleTypeModel fetchVehicleType(String vtname) {
     try {
       PreparedStatement ps = dbConnectionHandler.getConnection()
@@ -304,6 +380,36 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
       rs.close();
       ps.close();
       return vehicleTypeModel;
+    } catch (SQLException e) {
+      dbConnectionHandler.rollbackConnection();
+      Util.printException(e.getMessage());
+      return null;
+    }
+  }
+
+  @Override
+  public VehicleModel fetchVehicle(String vlicense) {
+    try {
+      PreparedStatement ps = dbConnectionHandler.getConnection()
+              .prepareStatement("SELECT * FROM vehicle WHERE vlicense = ?");
+      ps.setString(1, vlicense);
+      ResultSet rs = ps.executeQuery();
+
+      VehicleModel vehicle = null;
+      if (rs.next()) {
+        vehicle = new VehicleModel(
+                rs.getString("vlicense"),
+                rs.getString("vtname"),
+                rs.getInt("odometer"),
+                rs.getString("status"),
+                rs.getString("colour"),
+                rs.getString("location"),
+                rs.getString("city"));
+      }
+
+      rs.close();
+      ps.close();
+      return vehicle;
     } catch (SQLException e) {
       dbConnectionHandler.rollbackConnection();
       Util.printException(e.getMessage());

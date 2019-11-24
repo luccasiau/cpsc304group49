@@ -303,11 +303,15 @@ public class CommandLineUi {
   private void handleReturn() {
     ReturnModel returnModel = new ReturnModel();
     returnModel.readRentID(bufferedReader);
+    if (delegate.fetchRental(returnModel.getRentID()) != null) {
+      System.out.println("This vehicle has already been returned.");
+      return;
+    }
     RentModel rentalModel = delegate.fetchRental(returnModel.getRentID());
     String in = "";
-    while (rentalModel == null) {
+    while (rentalModel == null && !in.toLowerCase().equals("n")) {
       while (!in.toLowerCase().equals("y") && !in.toLowerCase().equals("n")) {
-        Util.printWarning("The rentID you entered was not found. Do you have a rentID? [y/n]: ");
+        System.out.print("The rentID you entered was not found. Do you have a rentID? [y/n]: ");
         in = Util.readString(bufferedReader, 255, true).orElse("");
       }
       if (in.equals("n")) return;
@@ -316,22 +320,26 @@ public class CommandLineUi {
       rentalModel = delegate.fetchRental(returnModel.getRentID());
     }
 
-    // return date should at least be later than the start date
-    returnModel.readReturnDate(bufferedReader, rentalModel.getStartdate());
-    // technically should be >= odometer of vehicle at start time of rental
-    returnModel.readOdometer(bufferedReader);
-    returnModel.readFullTank(bufferedReader);
-    VehicleTypeModel vehicleTypeModel = delegate.fetchVehicleType(rentalModel.getVtname());
-    if (vehicleTypeModel == null) {
-      vehicleTypeModel = new VehicleTypeModel("SUV", "AC", 7.0f, 1.0f,
-              0.2f, 0.1f, 5.0f, 1.0f, 0.1f);
+    VehicleModel vehicle = null;
+    while (vehicle == null) {
+      vehicle = delegate.fetchVehicle(rentalModel.getVlicense());
     }
+    VehicleTypeModel vehicleTypeModel = null;
+    if (vehicleTypeModel == null) {
+      vehicleTypeModel = delegate.fetchVehicleType(rentalModel.getVtname());
+    }
+
+    returnModel.readOdometer(bufferedReader, vehicle.getOdometer());
+    returnModel.readReturnDate(bufferedReader, rentalModel.getStartdate());
+    returnModel.readFullTank(bufferedReader);
     returnModel.calculateRevenue(vehicleTypeModel, rentalModel.getStartdate(), returnModel.getReturnDate());
 
     // Insert into database.
     if (delegate.insertReturn(returnModel)) {
       while (!delegate.updateVehicleOdometer(rentalModel.getVlicense(), returnModel.getOdometer()));
       while (!delegate.updateVehicleStatus(rentalModel.getVlicense(), "A"));
+      while (!delegate.updateReservationReturnDate(rentalModel.getConfno(), returnModel.getReturnDate()));
+      while (!delegate.updateRentalReturnDate(rentalModel.getRentid(), returnModel.getReturnDate()));
       System.out.println("\nReturn Successful!");
       System.out.printf("Reservation confirmation number: %s%n", rentalModel.getRentid());
       System.out.printf("Date of Return: %s%n",returnModel.getReturnDate());

@@ -13,6 +13,16 @@ public class ReturnModel {
     private float revenue;
     private Boolean fullTank;
 
+    public ReturnModel() {}
+
+    public ReturnModel(String rentID, Date returnDate, int odometer, float revenue, Boolean fullTank) {
+        this.rentID = rentID;
+        this.returnDate = returnDate;
+        this.odometer = odometer;
+        this.revenue = revenue;
+        this.fullTank = fullTank;
+    }
+
     public void readRentID(BufferedReader reader) {
         rentID = Util.genericStringRead(
                 reader,
@@ -28,12 +38,12 @@ public class ReturnModel {
                 startdate);
     }
 
-    public void readOdometer(BufferedReader reader) {
-        System.out.print("Enter odometer reading: ");
-        odometer = Util.readInteger(
+    public void readOdometer(BufferedReader reader, int prevOdometer) {
+        odometer = Util.genericIntegerRead(
                 reader,
-                false)
-                .orElse(1000);
+                "Enter odometer reading: ",
+                false,
+                prevOdometer);
     }
 
     public void calculateRevenue(VehicleTypeModel vehicleTypeModel, Date startDate, Date returnDate) {
