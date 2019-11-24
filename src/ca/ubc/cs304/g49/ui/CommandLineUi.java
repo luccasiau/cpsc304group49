@@ -430,7 +430,15 @@ public class CommandLineUi {
     ArrayList<VehicleModel> returned; // list of returned vehicles today
 
     returned = delegate.fetchReturnedVehicles();
+    int numVehicles = returned.size();
 
+    if(numVehicles > 0 ){
+      for(VehicleModel v : returned){
+        System.out.println("vehicle license: " + v.getVlicense() + " at: " + v.getLocation() + " type: " + v.getVtname());
+      }
+    } else {
+      System.out.println("No returned vehicles today.");
+    }
   }
 
   private void handleQuit() {
