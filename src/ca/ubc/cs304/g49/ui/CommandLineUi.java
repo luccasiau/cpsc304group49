@@ -207,9 +207,7 @@ public class CommandLineUi {
     int vehicleCount = delegate.fetchAvailableVehicles(
         reservationModel.getVtname(),
         reservationModel.getLocation(),
-        reservationModel.getCity(),
-        reservationModel.getStartDate(),
-        reservationModel.getEndDate()).size();
+        reservationModel.getCity()).size();
     // System.out.println("DEBUG vehicle count is " + vehicleCount);
     int busyCount = delegate.countActiveRentalsAndReservations(
         reservationModel.getVtname(),
@@ -265,7 +263,7 @@ public class CommandLineUi {
 
     // FIXME: Add city
     ArrayList<VehicleModel> availVehicles = delegate.fetchAvailableVehicles(
-        vm.getVtname(), vm.getLocation(), vm.getCity(), vm.getStartDate(), vm.getEndDate());
+        vm.getVtname(), vm.getLocation(), vm.getCity());
 
     // Removing excess vehicles.
     int toRemove = delegate.countActiveRentalsAndReservations(

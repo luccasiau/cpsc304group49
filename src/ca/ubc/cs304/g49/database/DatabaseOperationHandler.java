@@ -353,7 +353,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
 
   @Override
   public ArrayList<VehicleModel> fetchAvailableVehicles(
-      String vtname, String location, String city, Date start, Date end) {
+      String vtname, String location, String city) {
     ArrayList<VehicleModel> result = new ArrayList<>();
     try {
       PreparedStatement ps = dbConnectionHandler.getConnection()
