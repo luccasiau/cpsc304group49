@@ -5,6 +5,7 @@ import ca.ubc.cs304.g49.models.*;
 import ca.ubc.cs304.g49.util.Util;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -502,43 +503,43 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
   }
   @Override
   /**
-   * @param void
+   * @param date for which to generate return report
    * returns list of vehicles that were returned today
    * by getting list of vid of rentals that ended today
    */
-  public ArrayList<VehicleModel> fetchReturnedVehicles(){
-    ArrayList<VehicleModel> result = new ArrayList<>();
-    String date = new java.sql.Date(Calendar.getInstance().getTime().getTime()).toString();
+  public ResultSet generateReturnReport(Date date){
+//    String date = new java.sql.Date(Calendar.getInstance().getTime().getTime()).toString();
     try {
+        //Grouping by branch & vehicle type
       PreparedStatement ps = dbConnectionHandler.getConnection()
               .prepareStatement(
-                      "SELECT * FROM vehicle " +
-                              "WHERE vid EXISTS IN (SELECT * FROM rent WHERE toDate = ?"
+                      "SELECT R.location, R.city, V.vtname, count(*), sum(value) " +
+                              "FROM Rent R, Vehicle V, Return R2 " +
+                              "WHERE R2.rentId = R.rentId AND R2.returnDate BETWEEN ? AND ? " +
+                              "GROUP BY R.location, R.city, V.vtname "
                               );
-      ps.setString(1, date); //set today date
+      ps.setDate(1, date); //set today date
+      ps.setDate(2, date);
 
       ResultSet rs = ps.executeQuery();
-
-      while(rs.next()){
-        VehicleModel newVehicle =  new VehicleModel(rs.getString("vlicense"),
-                rs.getString("vtname"),
-                rs.getInt("odometer"),
-                rs.getString("status"),
-                rs.getString("colour"),
-                rs.getString("location"),
-                rs.getString("city"));
-        result.add(newVehicle);
+      while(rs.next()){ //for each row
+          System.out.println("Location: " + rs.getString(0) +
+                  " City: " + rs.getString(1) +
+                  " vehicle type name :" + rs.getString(2) +
+                  " Count: " + rs.getInt(3) +
+                  " Sum: " + rs.getInt(4));
       }
 
       dbConnectionHandler.getConnection().commit();
       rs.close();
       ps.close();
+      return rs;
 
     } catch (Exception e){
       dbConnectionHandler.rollbackConnection();
       Util.printException(e.getMessage());
     }
-    return result;
+    return null;
   }
 
 
