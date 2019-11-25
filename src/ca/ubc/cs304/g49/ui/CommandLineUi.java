@@ -428,7 +428,8 @@ public class CommandLineUi {
   //New rentals within that day
   private void handleDailyRentals(){
       Date minDate = Date.valueOf("1990-01-01");
-      Date currDate = Util.genericDateRead(bufferedReader, "Enter the day you would like to generate Daily Rentals for: [yyyy-mm-dd] ", minDate);
+      Date currDate = Util.genericDateRead(
+          bufferedReader, "Enter the day you would like to generate Daily Rentals for: [yyyy-mm-dd] ", false, minDate);
       delegate.generateRentalReportPerVehicleBranch(currDate);
       delegate.generateRentalReportBranch(currDate);
       delegate.generateRentalCompany(currDate);
@@ -443,7 +444,8 @@ public class CommandLineUi {
               25,
               false);
       Date minDate = Date.valueOf("1990-01-01");
-      Date curdate = Util.genericDateRead(bufferedReader, "Enter the day you would like to generate Daily Rentals for: [yyyy-mm-dd] ", minDate);
+      Date curdate = Util.genericDateRead(
+          bufferedReader, "Enter the day you would like to generate Daily Rentals for: [yyyy-mm-dd] ", false, minDate);
       delegate.generateRentalForBranchByVehicle(location, city, curdate);
       delegate.generateRentalForBranch(location, city, curdate);
   }
@@ -462,6 +464,7 @@ public class CommandLineUi {
     Date curdate = Util.genericDateRead(
         bufferedReader,
         "Which day would you like to generate Daily Returns for? [yyyy-mm-dd] ",
+        false,
         minDate);
     delegate.generateReturnForBranchByVehicle(location, city, curdate);
     delegate.generateReturnForBranch(location, city, curdate);
