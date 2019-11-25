@@ -937,7 +937,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                  rm.printRentalReportBranch();
              }
          } else {
-             System.out.printf("\nNo returned vehicles for date %s\n", date.toString());
+             System.out.printf("\nNo rented vehicles for date %s\n", date.toString());
          }
          dbConnectionHandler.getConnection().commit();
          rs.close();
@@ -1018,12 +1018,11 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                     reports.add(newReport);
 
                 }
-                System.out.printf("Returns for Branch %s, %s%n", location, city);
                 for(ReportModel rm :  reports) {
                     rm.printRentalForBranchByVehicle();
                 }
             } else {
-                System.out.printf("\nNo returned vehicles for date %s\n", date.toString());
+                System.out.printf("\nNo rentals vehicles for date %s\n", date.toString());
             }
             dbConnectionHandler.getConnection().commit();
             rs.close();
@@ -1067,7 +1066,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                 }
 
             } else {
-                System.out.printf("\nNo returned vehicles for date %s\n", date.toString());
+                System.out.printf("\nNo rented vehicles for date %s\n", date.toString());
             }
             dbConnectionHandler.getConnection().commit();
             rs.close();
