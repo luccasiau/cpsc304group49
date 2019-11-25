@@ -462,7 +462,6 @@ public class CommandLineUi {
     Date curdate = Util.genericDateRead(
         bufferedReader,
         "Which day would you like to generate Daily Returns for? [yyyy-mm-dd] ",
-        false,
         minDate);
     delegate.generateReturnForBranchByVehicle(location, city, curdate);
     delegate.generateReturnForBranch(location, city, curdate);
