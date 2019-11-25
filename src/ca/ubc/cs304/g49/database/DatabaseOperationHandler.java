@@ -651,7 +651,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
              .prepareStatement(
                      "SELECT V.vtname, count(*), sum(R2.revenue) " +
                              "FROM Rent R, Vehicle V, Return R2 " +
-                             "WHERE R2.rentId = R.rentId AND R2.returnDate = ? AND R.vlicense = V.vlicense AND V.location = ? AND V.city = ?" +
+                             "WHERE R2.rentId = R.rentId AND R.vlicense = V.vlicense AND R2.returnDate = ? AND R.vlicense = V.vlicense AND V.location = ? AND V.city = ?" +
                              "GROUP BY V.vtname "
              );
      ps.setDate(1, date);
@@ -694,7 +694,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
              .prepareStatement(
                      "SELECT count(*), sum(R2.revenue) " +
                              "FROM Rent R, Return R2, Vehicle V " +
-                             "WHERE R2.rentId = R.rentId AND R2.returnDate = ? AND V.location = ? AND V.city = ?"
+                             "WHERE R2.rentId = R.rentId AND R.vlicense = V.vlicense AND R2.returnDate = ? AND V.location = ? AND V.city = ?"
              );
      ps.setDate(1, date);
      ps.setString(2, location);
