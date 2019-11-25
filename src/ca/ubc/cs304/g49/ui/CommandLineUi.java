@@ -309,7 +309,7 @@ public class CommandLineUi {
     }
     RentModel rentalModel = delegate.fetchRental(returnModel.getRentID());
     String in = "";
-    while (rentalModel == null && !in.toLowerCase().equals("n")) {
+    while (rentalModel == null && !in.toLowerCase().equals("y")) {
       while (!in.toLowerCase().equals("y") && !in.toLowerCase().equals("n")) {
         System.out.print("The rentID you entered was not found. Do you have a rentID? [y/n]: ");
         in = Util.readString(bufferedReader, 255, true).orElse("");
@@ -343,12 +343,12 @@ public class CommandLineUi {
       System.out.println("\nReturn Successful!");
       System.out.printf("Reservation confirmation number: %s%n", rentalModel.getRentid());
       System.out.printf("Date of Return: %s%n",returnModel.getReturnDate());
-      System.out.printf("Total cost for rental: %s%n", returnModel.getRevenue());
-      System.out.println("Weekly costs: " + returnModel.getWeeklyRateCharges() + "Weekly insurance costs: "
+      System.out.printf("Total cost for rental: $%s%n", returnModel.getRevenue());
+      System.out.println("Weekly costs: $" + returnModel.getWeeklyRateCharges() + "Weekly insurance costs: $"
               + returnModel.getWeeklyInsuranceRateCharges());
-      System.out.println("Daily costs: " + returnModel.getDayRateCharges() + "Daily insurance costs: "
+      System.out.println("Daily costs: $" + returnModel.getDayRateCharges() + "Daily insurance costs: $"
               + returnModel.getDailyInsuranceRateCharges());
-      System.out.println("Hourly costs: " + returnModel.getHourRateCharges() + "Hourly insurance costs: "
+      System.out.println("Hourly costs: $" + returnModel.getHourRateCharges() + "Hourly insurance costs: $"
               + returnModel.getHourlyInsuranceRateCharges());
     } else {
       Util.printWarning("Vehicle return failed.");

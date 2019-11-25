@@ -108,11 +108,11 @@ public class Util {
       System.out.print(message);
       Integer integer = readInteger(
                 reader,
-                false)
+              allowEmpty)
                 .orElse(1000);
 
       if (integer < minValue) {
-        Util.printWarning("Odometer reading at time of return cannot be less than odometer at time of rental");
+        Util.printWarning("Odometer reading at time of return cannot be less than " + minValue + "km");
         continue;
       }
 

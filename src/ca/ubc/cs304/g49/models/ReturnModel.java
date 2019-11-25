@@ -41,13 +41,13 @@ public class ReturnModel {
         return dailyInsuranceRateCharges;
     }
 
-    private float weeklyRateCharges;
-    private float dayRateCharges;
-    private float hourRateCharges;
-    private float kiloRateCharges;
-    private float weeklyInsuranceRateCharges;
-    private float hourlyInsuranceRateCharges;
-    private float dailyInsuranceRateCharges;
+    private float weeklyRateCharges = 0.0f;
+    private float dayRateCharges = 0.0f;
+    private float hourRateCharges = 0.0f;
+    private float kiloRateCharges = 0.0f;
+    private float weeklyInsuranceRateCharges = 0.0f;
+    private float hourlyInsuranceRateCharges = 0.0f;
+    private float dailyInsuranceRateCharges = 0.0f;
 
     public ReturnModel() {}
 
