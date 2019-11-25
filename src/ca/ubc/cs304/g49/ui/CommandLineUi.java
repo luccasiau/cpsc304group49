@@ -305,6 +305,8 @@ public class CommandLineUi {
 
     ArrayList<String> vtnames = new ArrayList<>(vtnamesSet);
     ArrayList<String[]> locationsAndCities = new ArrayList<>(locationAndCitiesSet);
+    System.out.println("DEBUG vtnamessize: " + vtnames.size());
+    System.out.println("DEBUG locationsAndCities size: " + locationsAndCities.size());
     ArrayList<VehicleModel> availVehicles = new ArrayList<>();
     for (int i=0; i < vtnames.size(); i++) {
       for (int j=0; j < locationsAndCities.size(); j++) {
