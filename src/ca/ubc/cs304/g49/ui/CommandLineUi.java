@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Array;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Optional;
@@ -440,6 +441,7 @@ public class CommandLineUi {
     Date curdate = Util.genericDateRead(
         bufferedReader,
         "Which day would you like to generate Daily Returns for? [yyyy-mm-dd] ",
+        false,
         minDate);
     delegate.generateReturnForBranchByVehicle(location, city, curdate);
     delegate.generateReturnForBranch(location, city, curdate);
@@ -450,7 +452,8 @@ public class CommandLineUi {
   //Must generate report for any day.
   private void handleDailyReturns() {
     Date minDate = Date.valueOf("1990-01-01");
-    Date currDate = Util.genericDateRead(bufferedReader, "Which day would you like to generate Daily Returns for? [yyyy-mm-dd] ", minDate);
+    Date currDate = Util.genericDateRead(
+        bufferedReader, "Which day would you like to generate Daily Returns for? [yyyy-mm-dd] ", false, minDate);
     delegate.generateReturnReportPerVehicleBranch(currDate);
     delegate.generateReturnReportBranch(currDate);
     delegate.generateReturnCompany(currDate);
