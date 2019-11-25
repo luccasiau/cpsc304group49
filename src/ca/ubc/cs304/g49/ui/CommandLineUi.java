@@ -314,7 +314,7 @@ public class CommandLineUi {
     }
 
     // Removing excess vehicles.
-    if (!vm.getStartDate().equals("") && !vm.getEndDate().equals("")) {
+    if (vm.getStartDate() == null) {
       int toRemove = 0;
       for (int i=0; i < vtnames.size(); i++) {
         for (int j=0; j < locationsAndCities.size(); j++) {
