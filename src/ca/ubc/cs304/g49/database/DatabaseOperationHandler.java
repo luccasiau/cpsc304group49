@@ -512,7 +512,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
     try {
       // System.out.println("DEBUG: vtname = " + vtname);
       PreparedStatement ps = dbConnectionHandler.getConnection()
-              .prepareStatement("SELECT * FROM vehicle ORDER BY vlicense");
+              .prepareStatement("SELECT UNIQUE * FROM vehicle ORDER BY vlicense");
 
       ResultSet rs = ps.executeQuery();
 
