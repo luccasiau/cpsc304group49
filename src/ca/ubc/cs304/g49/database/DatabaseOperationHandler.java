@@ -357,7 +357,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
   @Override
   public VehicleTypeModel fetchVehicleType(String vtname) {
     try {
-      System.out.println("DEBUG: vtname = " + vtname);
+      // System.out.println("DEBUG: vtname = " + vtname);
       PreparedStatement ps = dbConnectionHandler.getConnection()
               .prepareStatement("SELECT * FROM vehicletype WHERE vtname = ?");
       ps.setString(1, vtname);
@@ -366,7 +366,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
 
       VehicleTypeModel vehicleTypeModel = null;
       if (rs.next()) {
-        System.out.println("DEBUG: FOUND SOMETHING");
+        // System.out.println("DEBUG: FOUND SOMETHING");
         vehicleTypeModel = new VehicleTypeModel(
                 rs.getString("vtname"),
                 rs.getString("features"),
@@ -377,7 +377,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                 rs.getFloat("weeklyInsRate"),
                 rs.getFloat("dailyInsRate"),
                 rs.getFloat("hourlyInsRate"));
-        System.out.println("DEBUG vtmodel = " + vehicleTypeModel);
+        // System.out.println("DEBUG vtmodel = " + vehicleTypeModel);
       }
 
       rs.close();
