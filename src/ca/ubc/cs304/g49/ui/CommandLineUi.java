@@ -283,7 +283,7 @@ public class CommandLineUi {
     vm.readVehicleInfo(bufferedReader);
 
     Set<String> vtnamesSet = new HashSet<>();
-    Set<String[]> locationAndCitiesSet = new HashSet<>();
+    Set<String> locationAndCitiesSet = new HashSet<>();
     ArrayList<VehicleModel> vehicles = delegate.fetchAllVehicles();
     System.out.println("DEBUG: " + vehicles.size());
 
@@ -297,22 +297,23 @@ public class CommandLineUi {
 
     if (vm.getLocation().equals("") && vm.getCity().equals("")) {
       for (VehicleModel vehicle : vehicles) {
-        locationAndCitiesSet.add(new String[] {vehicle.getLocation(), vehicle.getCity()});
+        locationAndCitiesSet.add(vehicle.getLocation() + "?" + vehicle.getCity());
       }
     } else {
-      locationAndCitiesSet.add(new String[] {vm.getLocation(), vm.getCity()});
+      locationAndCitiesSet.add(vm.getLocation() + "?" + vm.getCity());
     }
 
     ArrayList<String> vtnames = new ArrayList<>(vtnamesSet);
-    ArrayList<String[]> locationsAndCities = new ArrayList<>(locationAndCitiesSet);
+    ArrayList<String> locationsAndCities = new ArrayList<>(locationAndCitiesSet);
     System.out.println("DEBUG vtnamessize: " + vtnames.size());
     System.out.println("DEBUG locationsAndCities size: " + locationsAndCities.size());
     ArrayList<VehicleModel> availVehicles = new ArrayList<>();
     for (int i=0; i < vtnames.size(); i++) {
       for (int j=0; j < locationsAndCities.size(); j++) {
+        String[] locCity = locationsAndCities.get(j).split("\\?");
         availVehicles.addAll(delegate.fetchAvailableVehicles(vtnames.get(i),
-                locationsAndCities.get(j)[0],
-                locationsAndCities.get(j)[1]));
+                locCity[0],
+                locCity[1]));
       }
     }
 
@@ -321,10 +322,11 @@ public class CommandLineUi {
       int toRemove = 0;
       for (int i=0; i < vtnames.size(); i++) {
         for (int j=0; j < locationsAndCities.size(); j++) {
+          String[] locCity = locationsAndCities.get(j).split("\\?");
           toRemove += delegate.countActiveRentalsAndReservations(
                   vtnames.get(i),
-                  locationsAndCities.get(j)[0],
-                  locationsAndCities.get(j)[1],
+                  locCity[0],
+                  locCity[1],
                   vm.getStartDate(),
                   vm.getEndDate());
         }
