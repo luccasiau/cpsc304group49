@@ -331,7 +331,7 @@ public class CommandLineUi {
     }
     VehicleTypeModel vehicleTypeModel = null;
     if (vehicleTypeModel == null) {
-      vehicleTypeModel = delegate.fetchVehicleType(rentalModel.getVtname());
+      vehicleTypeModel = delegate.fetchVehicleType(vehicle.getVtname());
     }
 
     returnModel.readOdometer(bufferedReader, vehicle.getOdometer());
