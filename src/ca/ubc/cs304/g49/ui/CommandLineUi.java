@@ -322,6 +322,9 @@ public class CommandLineUi {
     }
 
     RentModel rentalModel = delegate.fetchRental(returnModel.getRentID());
+    System.out.println("DEBUG: rentalModel = " + rentalModel);
+    System.out.println("DEBUG: rentalModel vlicense " + rentalModel.getVlicense());
+    System.out.println("DEBUG: rentalModel vtname " + rentalModel.getVtname());
     VehicleModel vehicle = null;
     while (vehicle == null) {
       vehicle = delegate.fetchVehicle(rentalModel.getVlicense());
