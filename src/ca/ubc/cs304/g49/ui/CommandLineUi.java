@@ -288,7 +288,8 @@ public class CommandLineUi {
         for(VehicleModel availableVehicles : availVehicles){
           System.out.println(
               "vehicle license: " + availableVehicles.getVlicense() +
-              " at: " + availableVehicles.getLocation() +
+              " location: " + availableVehicles.getLocation() +
+              " city: " + availableVehicles.getCity() +
               " type: " + availableVehicles.getVtname());
         }
       } else {
