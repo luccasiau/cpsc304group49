@@ -60,8 +60,8 @@ public class VehicleTypeModel {
                             float hourRate,
                             float kiloRate,
                             float winsuranceRate,
-                            float hinsuranceRate,
-                            float dinsuranceRate) {
+                            float dinsuranceRate,
+                            float hinsuranceRate) {
         this.vtname = vtname;
         this.features = features;
         this.weeklyRate = weeklyRate;

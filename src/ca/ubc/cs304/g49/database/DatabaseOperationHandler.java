@@ -372,9 +372,9 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                 rs.getFloat("dayRate"),
                 rs.getFloat("hourRate"),
                 rs.getFloat("kiloRate"),
-                rs.getFloat("winsuranceRate"),
-                rs.getFloat("hinsuranceRate"),
-                rs.getFloat("dinsuranceRate"));
+                rs.getFloat("weeklyInsRate"),
+                rs.getFloat("dailyInsRate"),
+                rs.getFloat("hourlyInsRate"));
       }
 
       rs.close();
