@@ -31,6 +31,35 @@ public class ReportModel {
             return revenue;
         }
 
+    public void printRentalForBranch(){
+            System.out.printf("Branch %s, %s rental count: %d", count);
+    }
+    public void printRentalForBranchByVehicle(){
+            char[] vtc = new char[FieldSizes.MAXIMUM_VTNAME_SIZE-typename.length()];
+            Arrays.fill(vtc, ' ');
+            String formatted_type = new String(vtc);
+            System.out.printf("Location: %s    City: %s    Vehicles name: %s%sVehicles rented: %d    ",
+                    location, typename, formatted_type, count);
+
+        }
+
+    public void printRentalCompany(){
+        System.out.printf("Company Rental count: %d", count);
+    }
+
+    public void printRentalReportBranch(){
+            System.out.printf("Location: %s    City: %s    Vehicles rented: %d",
+                    location, city, count);
+        }
+        public void printRentalBranchVehicleType(){
+            char[] vtc = new char[FieldSizes.MAXIMUM_VTNAME_SIZE-typename.length()];
+            Arrays.fill(vtc, ' ');
+            String formatted_type = new String(vtc);
+            System.out.printf("Location: %s    Vehicles name: %s%sVehicles rented: %d    ",
+                    location, typename, formatted_type, count);
+
+}
+
         public void printReturnEntireReportBranch(){
             System.out.printf("No. reserved: %d    Total revenue $%d%n", count, revenue);
         }
