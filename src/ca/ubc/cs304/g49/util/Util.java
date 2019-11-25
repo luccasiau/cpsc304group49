@@ -125,7 +125,11 @@ public class Util {
     while (true) {
       System.out.print(message);
       try {
-        Date date = Date.valueOf(Util.readString(reader, 10, allowEmpty).orElse(""));
+        String dateString = Util.readString(reader, 10, allowEmpty).orElse("");
+        if (allowEmpty == true && dateString.length() == 0) {
+          return null;
+        }
+        Date date = Date.valueOf(dateString);
         if (date.compareTo(minDate) < 0) {
           Util.printWarning("Date has to be at least " + minDate.toString());
           continue;

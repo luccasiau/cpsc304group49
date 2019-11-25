@@ -97,6 +97,7 @@ public class VehicleModel {
             "Enter start date (yyyy-mm-dd): ",
             true,
             Date.valueOf("1990-01-01"));
+     if (start == null) return;
      end = Util.genericDateRead(
             reader,
             "Enter end date (yyyy-mm-dd): ",
