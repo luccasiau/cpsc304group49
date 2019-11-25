@@ -805,8 +805,9 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                              "FROM Rent R, Return R2, Vehicle V " +
                              "WHERE R2.rentId = R.rentId AND R2.returnDate = ? AND V.location = ? AND V.city = ?"
              );
-     ps.setString(1, location);
-     ps.setString(2, city);
+     ps.setDate(1, date);
+     ps.setString(2, location);
+     ps.setString(3, city);
      ResultSet rs = ps.executeQuery();
      if (rs.isBeforeFirst()) {
        while(rs.next()) { //for each row
