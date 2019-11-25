@@ -121,11 +121,11 @@ public class Util {
   }
 
   public static Date genericDateRead(
-      BufferedReader reader, String message, Date minDate) {
+      BufferedReader reader, String message, boolean allowEmpty, Date minDate) {
     while (true) {
       System.out.print(message);
       try {
-        Date date = Date.valueOf(Util.readString(reader, 10, false).orElse(""));
+        Date date = Date.valueOf(Util.readString(reader, 10, allowEmpty).orElse(""));
         if (date.compareTo(minDate) < 0) {
           Util.printWarning("Date has to be at least " + minDate.toString());
           continue;

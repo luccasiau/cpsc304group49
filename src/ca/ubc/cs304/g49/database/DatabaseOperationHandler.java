@@ -506,6 +506,39 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
     return result;
   }
 
+  @Override
+  public ArrayList<VehicleModel> fetchAllVehicles() {
+    ArrayList<VehicleModel> result = new ArrayList<>();
+    try {
+      // System.out.println("DEBUG: vtname = " + vtname);
+      PreparedStatement ps = dbConnectionHandler.getConnection()
+              .prepareStatement("SELECT * FROM vehicle ORDER BY vlicense");
+
+      ResultSet rs = ps.executeQuery();
+
+      if (rs.next()) {
+        // System.out.println("DEBUG: FOUND SOMETHING");
+        VehicleModel newVehicle =  new VehicleModel(rs.getString("vlicense"),
+                rs.getString("vtname"),
+                rs.getInt("odometer"),
+                rs.getString("status"),
+                rs.getString("colour"),
+                rs.getString("location"),
+                rs.getString("city"));
+        result.add(newVehicle);
+        // System.out.println("DEBUG vtmodel = " + vehicleTypeModel);
+      }
+
+      rs.close();
+      ps.close();
+    } catch (SQLException e) {
+      dbConnectionHandler.rollbackConnection();
+      Util.printException(e.getMessage());
+      return result;
+    }
+    return result;
+  }
+
   /**
    * Counts the number of current reservations that intersect the time period
    * defined by [start, end] for that current location & city.
