@@ -885,7 +885,6 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
          ResultSet rs = ps.executeQuery();
          if (rs.isBeforeFirst()) {
              while (rs.next()) { //for each row
-
                  ReportModel newReport = new ReportModel(curr,
                          rs.getString(1), //loc
                          rs.getString(2),  //city
@@ -897,6 +896,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
              }
              for (ReportModel rm : reports) {
                 rm.printRentalBranchVehicleType();
+               System.out.println("\n");
              }
          }
      } catch (Exception e){
@@ -980,7 +980,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                  rm.printRentalCompany();
              }
          } else {
-             System.out.printf("\nNo returned vehicles for date %s\n", date.toString());
+             System.out.printf("\nNo rented vehicles for date %s\n", date.toString());
          }
          dbConnectionHandler.getConnection().commit();
          rs.close();
