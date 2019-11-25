@@ -8,6 +8,8 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
 
 public class DatabaseOperationHandler implements CommandLineUiDelegate {
   private DatabaseConnectionHandler dbConnectionHandler;
@@ -501,14 +503,103 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
     return countActiveRentalsNoConf(vtname, location, city, start, end) +
         countActiveReservations(vtname, location, city, start, end);
   }
+
+  public void generateReturnCompany(Date date){ HashSet<ReportModel>reports = new HashSet<ReportModel>();
+    try {
+      //Grouping by branch & vehicle type
+      PreparedStatement ps = dbConnectionHandler.getConnection()
+              .prepareStatement(
+                      "SELECT count(*), sum(R2.revenue) " +
+                              "FROM Rent R, Return R2 " +
+                              "WHERE R2.rentId = R.rentId AND R2.returnDate = ? "
+              );
+      ps.setDate(1, date); //set today date
+
+      ResultSet rs = ps.executeQuery();
+      if (rs.isBeforeFirst()) {
+        while(rs.next()) { //for each row
+
+
+          ReportModel newReport = new ReportModel(date,
+                  "", //loc
+                  "",  //city
+                  "", // vtname
+                  rs.getInt(1), //count
+                  rs.getInt(2)); //revenue
+          reports.add(newReport);
+
+        }
+        int grandTotal = 0;
+        for(ReportModel rm :  reports){
+          grandTotal += rm.getRevenue();
+          rm.printReportCompany();
+        }
+        System.out.printf("Grand total: %d%n", grandTotal);
+
+
+      } else {
+        System.out.printf("\nNo returned vehicles for date %s\n", date.toString());
+      }
+      dbConnectionHandler.getConnection().commit();
+      rs.close();
+      ps.close();
+    } catch (Exception e){
+      dbConnectionHandler.rollbackConnection();
+      Util.printException(e.getMessage());
+    }}
+
+  public void generateReturnReportBranch(Date date){
+    HashSet<ReportModel>reports = new HashSet<ReportModel>();
+    try {
+      //Grouping by branch & vehicle type
+      PreparedStatement ps = dbConnectionHandler.getConnection()
+              .prepareStatement(
+                      "SELECT V.location, V.city, count(*), sum(R2.revenue) " +
+                              "FROM Rent R, Vehicle V, Return R2 " +
+                              "WHERE R2.rentId = R.rentId AND R2.returnDate = ? AND R.vlicense = V.vlicense " +
+                              "GROUP BY V.location, V.city"
+              );
+      ps.setDate(1, date); //set today date
+
+      ResultSet rs = ps.executeQuery();
+      if (rs.isBeforeFirst()) {
+        while(rs.next()) { //for each row
+          ReportModel newReport = new ReportModel(date,
+                  rs.getString(1), //loc
+                  rs.getString(2),  //city
+                  "", // vtname
+                  rs.getInt(4), //count
+                  rs.getInt(5)); //revenue
+          reports.add(newReport);
+        }
+        int grandTotal = 0;
+        for(ReportModel rm :  reports){
+          grandTotal += rm.getRevenue();
+          rm.printReportBranch();
+        }
+        System.out.printf("Grand total: %d%n", grandTotal);
+
+
+      } else {
+        System.out.printf("\nNo returned vehicles for date %s\n", date.toString());
+      }
+      dbConnectionHandler.getConnection().commit();
+      rs.close();
+      ps.close();
+    } catch (Exception e){
+      dbConnectionHandler.rollbackConnection();
+      Util.printException(e.getMessage());
+    }
+  }
   @Override
   /**
    * @param date for which to generate return report
    * returns list of vehicles that were returned today
    * by getting list of vid of rentals that ended today
    */
-  public void generateReturnReport(Date date){
+  public void generateReturnReportPerVehicleBranch(Date date){
 //    String date = new java.sql.Date(Calendar.getInstance().getTime().getTime()).toString();
+    HashSet<ReportModel>reports = new HashSet<ReportModel>();
     try {
         //Grouping by branch & vehicle type
       PreparedStatement ps = dbConnectionHandler.getConnection()
@@ -522,13 +613,25 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
 
       ResultSet rs = ps.executeQuery();
       if (rs.isBeforeFirst()) {
-        while(rs.next()){ //for each row
-          System.out.println("Location: " + rs.getString(1) +
-                  " City: " + rs.getString(2) +
-                  " vehicle type name:" + rs.getString(3) +
-                  " Count: " + rs.getInt(4) +
-                  " Total Revenue: " + rs.getInt(5));
-      }
+        while(rs.next()) { //for each row
+
+          ReportModel newReport = new ReportModel(date,
+                  rs.getString(1), //loc
+                  rs.getString(2),  //city
+                  rs.getString(3), // vtname
+                  rs.getInt(4), //count
+                  rs.getInt(5)); //revenue
+          reports.add(newReport);
+
+        }
+        int grandTotal = 0;
+        for(ReportModel rm :  reports){
+          grandTotal += rm.getRevenue();
+          rm.printReportBranchVehicleType();
+        }
+        System.out.printf("Grand total: %d%n", grandTotal);
+
+
         } else {
         System.out.printf("\nNo returned vehicles for date %s\n", date.toString());
       }
