@@ -75,6 +75,7 @@ public class ReturnModel {
         returnDate = Util.genericDateRead(
                 reader,
                 "Enter return date (yyyy-mm-dd): ",
+                false,
                 startdate);
     }
 

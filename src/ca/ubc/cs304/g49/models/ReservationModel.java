@@ -115,10 +115,11 @@ public class ReservationModel {
     startDate = Util.genericDateRead(
         reader,
         "Enter start date (yyyy-mm-dd): ",
+        false,
         Date.valueOf("1990-01-01"));
   }
 
   private void readEndDate(BufferedReader reader) {
-    endDate = Util.genericDateRead(reader, "Enter end date (yyyy-mm-dd): ", startDate);
+    endDate = Util.genericDateRead(reader, "Enter end date (yyyy-mm-dd): ", false, startDate);
   }
 }

@@ -14,6 +14,10 @@ import java.util.Optional;
  * provided BufferedReader.
  */
 public class VehicleTypeModel {
+    public String getVtname() {
+        return vtname;
+    }
+
     private String vtname;
     private String features;
 

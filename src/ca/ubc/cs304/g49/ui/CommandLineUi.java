@@ -9,11 +9,11 @@ import ca.ubc.cs304.g49.util.Util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Handles user interaction with CLI.
@@ -282,17 +282,57 @@ public class CommandLineUi {
     VehicleModel vm = new VehicleModel("", "", 0, "", "", "", "");
     vm.readVehicleInfo(bufferedReader);
 
-    // FIXME: Add city
-    ArrayList<VehicleModel> availVehicles = delegate.fetchAvailableVehicles(
-        vm.getVtname(), vm.getLocation(), vm.getCity());
+    Set<String> vtnamesSet = new HashSet<>();
+    Set<String> locationAndCitiesSet = new HashSet<>();
+    ArrayList<VehicleModel> vehicles = delegate.fetchAllVehicles();
+
+    if (vm.getVtname().equals("")) {
+      for (VehicleModel vehicle : vehicles) {
+        vtnamesSet.add(vehicle.getVtname());
+      }
+    } else {
+      vtnamesSet.add(vm.getVtname());
+    }
+
+    if (vm.getLocation().equals("") && vm.getCity().equals("")) {
+      for (VehicleModel vehicle : vehicles) {
+        locationAndCitiesSet.add(vehicle.getLocation() + "?" + vehicle.getCity());
+      }
+    } else {
+      locationAndCitiesSet.add(vm.getLocation() + "?" + vm.getCity());
+    }
+
+    ArrayList<String> vtnames = new ArrayList<>(vtnamesSet);
+    ArrayList<String> locationsAndCities = new ArrayList<>(locationAndCitiesSet);
+    ArrayList<VehicleModel> availVehicles = new ArrayList<>();
+    for (int i=0; i < vtnames.size(); i++) {
+      for (int j=0; j < locationsAndCities.size(); j++) {
+        String[] locCity = locationsAndCities.get(j).split("\\?");
+        availVehicles.addAll(delegate.fetchAvailableVehicles(vtnames.get(i),
+                locCity[0],
+                locCity[1]));
+      }
+    }
 
     // Removing excess vehicles.
-    int toRemove = delegate.countActiveRentalsAndReservations(
-        vm.getVtname(), vm.getLocation(), vm.getCity(), vm.getStartDate(), vm.getEndDate());
+    if (vm.getStartDate() == null) {
+      int toRemove = 0;
+      for (int i=0; i < vtnames.size(); i++) {
+        for (int j=0; j < locationsAndCities.size(); j++) {
+          String[] locCity = locationsAndCities.get(j).split("\\?");
+          toRemove += delegate.countActiveRentalsAndReservations(
+                  vtnames.get(i),
+                  locCity[0],
+                  locCity[1],
+                  vm.getStartDate(),
+                  vm.getEndDate());
+        }
+      }
 
-    while (availVehicles.size() > 0 && toRemove > 0) {
-      toRemove--;
-      availVehicles.remove(availVehicles.size() - 1);
+      while (availVehicles.size() > 0 && toRemove > 0) {
+        toRemove--;
+        availVehicles.remove(availVehicles.size() - 1);
+      }
     }
 
     int numVehicles = availVehicles.size();

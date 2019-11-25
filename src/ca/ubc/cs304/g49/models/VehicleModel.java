@@ -81,24 +81,29 @@ public class VehicleModel {
             reader,
             "Enter car type's name, must be one of [SUV] [Sedan] [Crossover] [Coupe] [Convertible]: ",
             FieldSizes.MAXIMUM_VTNAME_SIZE,
-            false);
+            true);
      location = Util.genericStringRead(
             reader,
             "Enter location: ",
             FieldSizes.MAXIMUM_LOCATION_SIZE,
-            false);
-     city = Util.genericStringRead(
-            reader,
-            "Enter branch city: ",
-            FieldSizes.MAXIMUM_CITY_SIZE,
-            false);
+            true);
+     if (!location.equals("")) {
+       city = Util.genericStringRead(
+               reader,
+               "Enter branch city: ",
+               FieldSizes.MAXIMUM_CITY_SIZE,
+               true);
+     }
      start = Util.genericDateRead(
             reader,
             "Enter start date (yyyy-mm-dd): ",
+            true,
             Date.valueOf("1990-01-01"));
+     if (start == null) return;
      end = Util.genericDateRead(
             reader,
             "Enter end date (yyyy-mm-dd): ",
+            true,
             start);
 
   }
