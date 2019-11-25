@@ -937,7 +937,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                  rm.printRentalReportBranch();
              }
          } else {
-             System.out.printf("\nNo returned vehicles for date %s\n", date.toString());
+             System.out.printf("\nNo rented vehicles for date %s\n", date.toString());
          }
          dbConnectionHandler.getConnection().commit();
          rs.close();
