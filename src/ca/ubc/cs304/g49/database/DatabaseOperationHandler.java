@@ -879,7 +879,8 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                          "SELECT V.location, V.city, V.vtname, count(*) " +
                                  "FROM Rent R, Vehicle V " +
                                  "WHERE R.startdate = ? AND R.vlicense = V.vlicense " +
-                                 "GROUP BY V.location, V.city, V.vtname "
+                                 "GROUP BY V.location, V.city, V.vtname "+
+                                 "ORDER BY V.location, V.city"
                  );
          ps.setDate(1, curr); //set today date
        System.out.println("[RentalReportPerVehicle]: done query");
