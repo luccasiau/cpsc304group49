@@ -303,33 +303,59 @@ public class CommandLineUi {
   private void handleReturn() {
     ReturnModel returnModel = new ReturnModel();
 
-    returnModel.readRentID(bufferedReader);
-    RentModel rentalModel = delegate.fetchRental(returnModel.getRentID());
-    if (rentalModel == null) {
-      Util.printWarning("The rentID you entered was not found. Only rented vehicles can be returned.\n");
-      return;
+    String in = "";
+    while (!in.toLowerCase().equals("y") && !in.toLowerCase().equals("n")) {
+      System.out.print("Do you have a rentID [y/n]? ");
+      in = Util.readString(bufferedReader, 255, true).orElse("");
     }
 
-    // return date should at least be later than the start date
-    returnModel.readReturnDate(bufferedReader, rentalModel.getStartdate());
-    // technically should be >= odometer of vehicle at start time of rental
-    returnModel.readOdometer(bufferedReader);
-    returnModel.readFullTank(bufferedReader);
-    VehicleTypeModel vehicleTypeModel = delegate.fetchVehicleType(rentalModel.getVtname());
-    if (vehicleTypeModel == null) {
-      vehicleTypeModel = new VehicleTypeModel("SUV", "AC", 7.0f, 1.0f,
-              0.2f, 0.1f, 5.0f, 1.0f, 0.1f);
+    if (in.equals("y")) {
+      returnModel.readRentID(bufferedReader);
+      while (delegate.fetchRental(returnModel.getRentID()) == null) {
+        System.out.println("Rental not found. Enter new rentID or type \"no\" in case");
+        returnModel.readRentID(bufferedReader);
+        if (returnModel.getRentID().toLowerCase().equals("no")) {
+          returnModel.setRentID("");
+          return;
+        }
+      }
     }
-    returnModel.calculateRevenue(vehicleTypeModel, rentalModel.getStartdate(), returnModel.getReturnDate());
+
+    RentModel rentalModel = delegate.fetchRental(returnModel.getRentID());
+    // System.out.println("DEBUG: rentalModel = " + rentalModel);
+    // System.out.println("DEBUG: rentalModel vlicense " + rentalModel.getVlicense());
+    // System.out.println("DEBUG: rentalModel vtname " + rentalModel.getVtname());
+    VehicleModel vehicle = null;
+    while (vehicle == null) {
+      vehicle = delegate.fetchVehicle(rentalModel.getVlicense());
+    }
+    VehicleTypeModel vehicleTypeModel = null;
+    if (vehicleTypeModel == null) {
+      vehicleTypeModel = delegate.fetchVehicleType(vehicle.getVtname());
+    }
+
+    returnModel.readOdometer(bufferedReader, vehicle.getOdometer());
+    returnModel.readReturnDate(bufferedReader, rentalModel.getStartdate());
+    returnModel.readFullTank(bufferedReader);
+    returnModel.calculateRevenue(vehicleTypeModel, rentalModel.getStartdate(), returnModel.getReturnDate(), vehicle.getOdometer());
 
     // Insert into database.
     if (delegate.insertReturn(returnModel)) {
       while (!delegate.updateVehicleOdometer(rentalModel.getVlicense(), returnModel.getOdometer()));
       while (!delegate.updateVehicleStatus(rentalModel.getVlicense(), "A"));
+      while (!delegate.updateReservationReturnDate(rentalModel.getConfno(), returnModel.getReturnDate()));
+      while (!delegate.updateRentalReturnDate(rentalModel.getRentid(), returnModel.getReturnDate()));
       System.out.println("\nReturn Successful!");
       System.out.printf("Reservation confirmation number: %s%n", rentalModel.getRentid());
       System.out.printf("Date of Return: %s%n",returnModel.getReturnDate());
-      System.out.printf("Total cost for rental: %s%n", returnModel.getRevenue());
+      System.out.printf("Total cost for rental: $%s%n", returnModel.getRevenue());
+      System.out.println("Weekly costs: $" + returnModel.getWeeklyRateCharges() + "Weekly insurance costs: $"
+              + returnModel.getWeeklyInsuranceRateCharges());
+      System.out.println("Daily costs: $" + returnModel.getDayRateCharges() + "Daily insurance costs: $"
+              + returnModel.getDailyInsuranceRateCharges());
+      System.out.println("Hourly costs: $" + returnModel.getHourRateCharges() + "Hourly insurance costs: $"
+              + returnModel.getHourlyInsuranceRateCharges());
+      System.out.println("Distance costs per km: $" + returnModel.getKiloRateCharges());
     } else {
       Util.printWarning("Vehicle return failed.");
     }

@@ -10,13 +10,63 @@ public class ReturnModel {
     private String rentID;
     private Date returnDate;
     private int odometer;
-    private float revenue;
     private Boolean fullTank;
+    private float revenue;
+
+    public float getWeeklyRateCharges() {
+        return weeklyRateCharges;
+    }
+
+    public float getDayRateCharges() {
+        return dayRateCharges;
+    }
+
+    public float getHourRateCharges() {
+        return hourRateCharges;
+    }
+
+    public float getKiloRateCharges() {
+        return kiloRateCharges;
+    }
+
+    public float getWeeklyInsuranceRateCharges() {
+        return weeklyInsuranceRateCharges;
+    }
+
+    public float getHourlyInsuranceRateCharges() {
+        return hourlyInsuranceRateCharges;
+    }
+
+    public float getDailyInsuranceRateCharges() {
+        return dailyInsuranceRateCharges;
+    }
+
+    private float weeklyRateCharges = 0.0f;
+    private float dayRateCharges = 0.0f;
+    private float hourRateCharges = 0.0f;
+    private float kiloRateCharges = 0.0f;
+    private float weeklyInsuranceRateCharges = 0.0f;
+    private float hourlyInsuranceRateCharges = 0.0f;
+    private float dailyInsuranceRateCharges = 0.0f;
+
+    public ReturnModel() {}
+
+    public ReturnModel(String rentID, Date returnDate, int odometer, float revenue, Boolean fullTank) {
+        this.rentID = rentID;
+        this.returnDate = returnDate;
+        this.odometer = odometer;
+        this.revenue = revenue;
+        this.fullTank = fullTank;
+    }
+
+    public void setRentID(String rentID) {
+        this.rentID = rentID;
+    }
 
     public void readRentID(BufferedReader reader) {
         rentID = Util.genericStringRead(
                 reader,
-                "Enter RentID",
+                "Enter RentID: ",
                 FieldSizes.MAXIMUM_RENTID_SIZE,
                 false);
     }
@@ -28,15 +78,15 @@ public class ReturnModel {
                 startdate);
     }
 
-    public void readOdometer(BufferedReader reader) {
-        System.out.print("Enter odometer reading: ");
-        odometer = Util.readInteger(
+    public void readOdometer(BufferedReader reader, int prevOdometer) {
+        odometer = Util.genericIntegerRead(
                 reader,
-                false)
-                .orElse(1000);
+                "Enter odometer reading: ",
+                false,
+                prevOdometer);
     }
 
-    public void calculateRevenue(VehicleTypeModel vehicleTypeModel, Date startDate, Date returnDate) {
+    public void calculateRevenue(VehicleTypeModel vehicleTypeModel, Date startDate, Date returnDate, int startingOdometer) {
         long hoursInMS = 1000 * 60 * 60;
         long daysInMS = hoursInMS * 24;
         long weeksInMS = daysInMS * 7;
@@ -50,12 +100,23 @@ public class ReturnModel {
 
         long hoursElapsed = millisecondsElapsed / hoursInMS;
 
-        revenue = weeksElapsed * vehicleTypeModel.getWeeklyRate()
-                + weeksElapsed * vehicleTypeModel.getWinsuranceRate()
-                + daysElapsed * vehicleTypeModel.getDayRate()
-                + daysElapsed * vehicleTypeModel.getDinsuranceRate()
-                + hoursElapsed * vehicleTypeModel.getHourRate()
-                + hoursElapsed * vehicleTypeModel.getHinsuranceRate();
+        int distanceTravelled = odometer - startingOdometer;
+
+        weeklyRateCharges = weeksElapsed * vehicleTypeModel.getWeeklyRate();
+        weeklyInsuranceRateCharges = weeksElapsed * vehicleTypeModel.getWinsuranceRate();
+        dayRateCharges = daysElapsed * vehicleTypeModel.getDayRate();
+        dailyInsuranceRateCharges = daysElapsed * vehicleTypeModel.getDinsuranceRate();
+        hourRateCharges = hoursElapsed * vehicleTypeModel.getHourRate();
+        hourlyInsuranceRateCharges = hoursElapsed * vehicleTypeModel.getHinsuranceRate();
+        kiloRateCharges = distanceTravelled * vehicleTypeModel.getKiloRate();
+
+        revenue = weeklyRateCharges
+                + weeklyInsuranceRateCharges
+                + dayRateCharges
+                + dailyInsuranceRateCharges
+                + hourRateCharges
+                + hourlyInsuranceRateCharges
+                + kiloRateCharges;
     }
 
     public void readFullTank(BufferedReader reader) {

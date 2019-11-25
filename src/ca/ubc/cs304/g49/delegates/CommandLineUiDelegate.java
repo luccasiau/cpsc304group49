@@ -19,9 +19,13 @@ public interface CommandLineUiDelegate {
   boolean confnoExist(String confno);
   boolean updateVehicleStatus(String vlicense, String status);
   boolean updateVehicleOdometer(String vlicense, int odometer);
+  boolean updateReservationReturnDate(String confno, Date returnDate);
+  boolean updateRentalReturnDate(String rentID, Date returnDate);
   ReservationModel fetchReservation(String confno);
   RentModel fetchRental(String rentId);
+  ReturnModel fetchReturn(String rentId);
   VehicleTypeModel fetchVehicleType(String vtname);
+  VehicleModel fetchVehicle(String vlicense);
   VehicleModel fetchVehicleFromTypeAndBranch(String vtname, String location, String city);
   ArrayList<VehicleModel>  fetchAvailableVehicles(
       String vtname, String location, String city);
