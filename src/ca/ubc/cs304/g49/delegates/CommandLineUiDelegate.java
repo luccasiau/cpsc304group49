@@ -41,4 +41,13 @@ public interface CommandLineUiDelegate {
   //return for branch
   void generateReturnForBranchByVehicle(String location, String city, Date date);
   void generateReturnForBranch(String location, String city, Date date);
+
+    // daily rental report (vtname + branch / branch / company wide)
+    void generateRentalReportPerVehicleBranch(Date curr);
+    void  generateRentalReportBranch(Date date);
+    void  generateRentalCompany(Date date);
+
+    //rental for branch
+    void generateRentalForBranchByVehicle(String location, String city, Date date);
+    void generateRentalForBranch(String location, String city, Date date);
 }

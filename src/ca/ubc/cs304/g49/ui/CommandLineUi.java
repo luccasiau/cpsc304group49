@@ -380,7 +380,12 @@ public class CommandLineUi {
     }
   }
   //New rentals within that day
-  private void handleDailyRentals(){}
+  private void handleDailyRentals(){
+      Date minDate = Date.valueOf("1990-01-01");
+      Date currDate = Util.genericDateRead(bufferedReader, "Which day would you like to generate Daily Returns for? [yyyy-mm-dd] ", minDate);
+
+
+  }
   private void handleDailyRentalsBranch(){}
   private void handleDailyReturnsBranch(){
     String location = Util.genericStringRead(bufferedReader,
