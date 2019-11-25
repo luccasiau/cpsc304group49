@@ -48,7 +48,7 @@ public class ReportModel {
     }
 
     public void printRentalReportBranch(){
-            System.out.printf("Location: %s    City: %s    Vehicles rented: %d%n",
+            System.out.printf("Location: %s    City: %s    Vehicles rented: %d\n",
                     location, city, count);
         }
         public void printRentalBranchVehicleType(){
