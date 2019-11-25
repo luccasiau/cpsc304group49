@@ -530,12 +530,9 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
           reports.add(newReport);
 
         }
-        int grandTotal = 0;
         for(ReportModel rm :  reports){
-          grandTotal += rm.getRevenue();
           rm.printReportCompany();
         }
-        System.out.printf("Grand total: %d%n", grandTotal);
 
 
       } else {
