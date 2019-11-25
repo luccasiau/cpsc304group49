@@ -30,5 +30,7 @@ public interface CommandLineUiDelegate {
   int countActiveRentalsNoConf(String vtname, String location, String city, Date start, Date end);
   int countActiveRentalsAndReservations(
       String vtname, String location, String city, Date start, Date end);
-  void generateReturnReport(Date curr);
+  void generateReturnReportPerVehicleBranch(Date curr);
+  void  generateReturnReportBranch(Date date);
+  void  generateReturnCompany(Date date);
 }

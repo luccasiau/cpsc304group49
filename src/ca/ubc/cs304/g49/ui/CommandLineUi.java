@@ -6,12 +6,9 @@ import ca.ubc.cs304.g49.models.*;
 import ca.ubc.cs304.g49.util.FieldSizes;
 import ca.ubc.cs304.g49.util.Util;
 
-import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -347,8 +344,9 @@ public class CommandLineUi {
   private void handleDailyReturns() {
     Date minDate = Date.valueOf("1990-01-01");
     Date currDate = Util.genericDateRead(bufferedReader, "Which day would you like to generate Daily Returns for? [yyyy-mm-dd] ", minDate);
-    delegate.generateReturnReport(currDate);
-
+    delegate.generateReturnReportPerVehicleBranch(currDate);
+    delegate.generateReturnReportBranch(currDate);
+    delegate.generateReturnCompany(currDate);
   }
 
   private void handleQuit() {
