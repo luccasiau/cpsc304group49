@@ -6,12 +6,9 @@ import ca.ubc.cs304.g49.models.*;
 import ca.ubc.cs304.g49.util.FieldSizes;
 import ca.ubc.cs304.g49.util.Util;
 
-import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -19,7 +16,7 @@ import java.util.Optional;
  * Handles user interaction with CLI.
  */
 public class CommandLineUi {
-  private static final int QUIT_INPUT = 6;  // FIXME: Update this as needed.
+  private static final int QUIT_INPUT = 10;  // FIXME: Update this as needed.
 
   private CommandLineUiDelegate delegate;
   private BufferedReader bufferedReader = null;
@@ -403,6 +400,12 @@ public class CommandLineUi {
   private void handleDailyReturnsBranch(){}
 
   //Must generate report for any day.
+  private void handleDailyReturns() {
+    Date minDate = Date.valueOf("1990-01-01");
+    Date currDate = Util.genericDateRead(bufferedReader, "Which day would you like to generate Daily Returns for? [yyyy-mm-dd] ", minDate);
+    delegate.generateReturnReportPerVehicleBranch(currDate);
+    delegate.generateReturnReportBranch(currDate);
+    delegate.generateReturnCompany(currDate);
   private void handleDailyReturns(){
       Date minDate = Date.valueOf("1990-01-01");
       Date currDate = Util.genericDateRead(bufferedReader, "Which day would you like to generate Daily Returns for? [yyyy-mm-dd] ", minDate);

@@ -34,4 +34,7 @@ public interface CommandLineUiDelegate {
       String vtname, String location, String city, Date start, Date end);
   ResultSet generateReturnReport(Date curr);
 
+  void generateReturnReportPerVehicleBranch(Date curr);
+  void  generateReturnReportBranch(Date date);
+  void  generateReturnCompany(Date date);
 }
