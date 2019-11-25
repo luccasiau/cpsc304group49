@@ -735,7 +735,6 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
    * by getting list of vid of rentals that ended today
    */
   public void generateReturnReportPerVehicleBranch(Date date){
-//    String date = new java.sql.Date(Calendar.getInstance().getTime().getTime()).toString();
       HashSet<ReportModel>reports = new HashSet<ReportModel>();
       try {
         //Grouping by branch & vehicle type
@@ -790,7 +789,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
              .prepareStatement(
                      "SELECT V.vtname, count(*), sum(R2.revenue) " +
                              "FROM Rent R, Vehicle V, Return R2 " +
-                             "WHERE R2.rentId = R.rentId AND R.vlicense = V.vlicense AND R2.returnDate = ? AND R.vlicense = V.vlicense AND V.location = ? AND V.city = ?" +
+                             "WHERE R2.rentId = R.rentId AND R2.returnDate = ? AND R.vlicense = V.vlicense AND V.location = ? AND V.city = ? " +
                              "GROUP BY V.vtname "
              );
      ps.setDate(1, date);
@@ -868,4 +867,214 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
    }
  }
 
+
+ //daily rentals by branch & vtname
+ public void generateRentalReportPerVehicleBranch(Date curr){
+     HashSet<ReportModel>reports = new HashSet<ReportModel>();
+     try {
+         //Grouping by branch & vehicle type
+         PreparedStatement ps = dbConnectionHandler.getConnection()
+                 .prepareStatement(
+                         "SELECT V.location, V.city, V.vtname, count(*) " +
+                                 "FROM Rent R, Vehicle V " +
+                                 "WHERE R.startdate = ? AND R.vlicense = V.vlicense " +
+                                 "GROUP BY V.location, V.city, V.vtname "
+                 );
+         ps.setDate(1, curr); //set today date
+
+         ResultSet rs = ps.executeQuery();
+         if (rs.isBeforeFirst()) {
+             while (rs.next()) { //for each row
+
+                 ReportModel newReport = new ReportModel(curr,
+                         rs.getString(1), //loc
+                         rs.getString(2),  //city
+                         rs.getString(3), // vtname
+                         rs.getInt(4), //count
+                         0); //revenue
+                 reports.add(newReport);
+
+             }
+             for (ReportModel rm : reports) {
+                rm.printRentalBranchVehicleType();
+             }
+         }
+     } catch (Exception e){
+         dbConnectionHandler.rollbackConnection();
+         Util.printException(e.getMessage());
+     }
+
+ }
+
+ //company wide rental grouped by branch
+ public void  generateRentalReportBranch(Date date){
+     HashSet<ReportModel>reports = new HashSet<ReportModel>();
+     try {
+         //Grouping by branch & vehicle type
+         PreparedStatement ps = dbConnectionHandler.getConnection()
+                 .prepareStatement(
+                         "SELECT V.location, V.city, V.vtname, count(*) " +
+                                 "FROM Rent R, Vehicle V " +
+                                 "WHERE R.vlicense = V.vlicense R.startdate = ? " +
+                                 "GROUP BY V.location, V.city, V.vtname "
+                 );
+         ps.setDate(1, date); //set today date
+
+         ResultSet rs = ps.executeQuery();
+         if (rs.isBeforeFirst()) {
+             while(rs.next()) { //for each row
+
+                 ReportModel newReport = new ReportModel(date,
+                         rs.getString(1), //loc
+                         rs.getString(2),  //city
+                         rs.getString(3), // vtname
+                         rs.getInt(4), //count
+                         0); //revenue
+                 reports.add(newReport);
+
+             }
+             for(ReportModel rm :  reports){
+                 rm.printRentalReportBranch();
+             }
+         } else {
+             System.out.printf("\nNo returned vehicles for date %s\n", date.toString());
+         }
+         dbConnectionHandler.getConnection().commit();
+         rs.close();
+         ps.close();
+     } catch (Exception e){
+         dbConnectionHandler.rollbackConnection();
+         Util.printException(e.getMessage());
+     }
+ }
+ //whole company info
+ public void  generateRentalCompany(Date date){
+     HashSet<ReportModel>reports = new HashSet<ReportModel>();
+     try {
+         //Grouping by branch & vehicle type
+         PreparedStatement ps = dbConnectionHandler.getConnection()
+                 .prepareStatement(
+                         "SELECT count(*) " +
+                                 "FROM Rent R " +
+                                 "WHERE R.startdate = ? "
+                 );
+         ps.setDate(1, date); //set today date
+
+         ResultSet rs = ps.executeQuery();
+         if (rs.isBeforeFirst()) {
+             while(rs.next()) { //for each row
+
+
+                 ReportModel newReport = new ReportModel(date,
+                         "", //loc
+                         "",  //city
+                         "", // vtname
+                         rs.getInt(1), //count
+                         0); //revenue
+                 reports.add(newReport);
+
+             }
+             for(ReportModel rm :  reports){
+                 rm.printRentalCompany();
+             }
+         } else {
+             System.out.printf("\nNo returned vehicles for date %s\n", date.toString());
+         }
+         dbConnectionHandler.getConnection().commit();
+         rs.close();
+         ps.close();
+     } catch (Exception e){
+         dbConnectionHandler.rollbackConnection();
+         Util.printException(e.getMessage());
+     }
+
+ };
+
+    //rental for branch, grouped by vehicle type
+    public void generateRentalForBranchByVehicle(String location, String city, Date date){
+        HashSet<ReportModel>reports = new HashSet<ReportModel>();
+        try {
+            //Grouping by branch & vehicle type
+            PreparedStatement ps = dbConnectionHandler.getConnection()
+                    .prepareStatement(
+                            "SELECT V.vtname, count(*) " +
+                                    "FROM Rent R, Vehicle V " +
+                                    "WHERE R.startdate = ? R.vlicense = V.vlicense AND V.location = ? AND V.city = ? " +
+                                    "GROUP BY V.vtname "
+                    );
+            ps.setDate(1, date);
+            ps.setString(2, location);
+            ps.setString(3, city);
+            ResultSet rs = ps.executeQuery();
+            if (rs.isBeforeFirst()) {
+                while(rs.next()) { //for each row
+
+                    ReportModel newReport = new ReportModel(date,
+                            location, //loc
+                            city,  //city
+                            rs.getString(1), // vtname
+                            rs.getInt(2), //count
+                            0); //revenue
+                    reports.add(newReport);
+
+                }
+                System.out.printf("Returns for Branch %s, %s%n", location, city);
+                for(ReportModel rm :  reports) {
+                    rm.printRentalForBranchByVehicle();
+                }
+            } else {
+                System.out.printf("\nNo returned vehicles for date %s\n", date.toString());
+            }
+            dbConnectionHandler.getConnection().commit();
+            rs.close();
+            ps.close();
+        } catch (Exception e){
+            dbConnectionHandler.rollbackConnection();
+            Util.printException(e.getMessage());
+        }
+    }
+
+
+
+    //rental info for whole branch
+    public void generateRentalForBranch(String location, String city, Date date){
+        HashSet<ReportModel>reports = new HashSet<ReportModel>();
+        try {
+            //Grouping by branch & vehicle type
+            PreparedStatement ps = dbConnectionHandler.getConnection()
+                    .prepareStatement(
+                            "SELECT count(*) " +
+                                    "FROM Rent R, Vehicle V " +
+                                    "WHERE R.startdate = ? AND V.vlicense = R.vlicense and V.location = ? AND V.city = ? "
+                    );
+            ps.setDate(1, date); //set today date
+            ps.setString(2, location);
+            ps.setString(3, city);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.isBeforeFirst()) {
+                while(rs.next()) { //for each row
+                    ReportModel newReport = new ReportModel(date,
+                            location, //loc
+                            city,  //city
+                            "", // vtname
+                            rs.getInt(1), //count
+                            0); //revenue
+                    reports.add(newReport);
+                }
+                for(ReportModel rm :  reports){
+                 rm.printRentalForBranch();
+                }
+
+            } else {
+                System.out.printf("\nNo returned vehicles for date %s\n", date.toString());
+            }
+            dbConnectionHandler.getConnection().commit();
+            rs.close();
+            ps.close();
+        } catch (Exception e){
+            dbConnectionHandler.rollbackConnection();
+            Util.printException(e.getMessage());
+        }
+    }
 }
