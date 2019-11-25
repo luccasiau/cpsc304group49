@@ -311,7 +311,7 @@ public class CommandLineUi {
 
     if (in.equals("y")) {
       returnModel.readRentID(bufferedReader);
-      while (delegate.fetchReservation(returnModel.getRentID()) == null) {
+      while (delegate.fetchRental(returnModel.getRentID()) == null) {
         System.out.println("Rental not found. Enter new rentID or type \"no\" in case");
         returnModel.readRentID(bufferedReader);
         if (returnModel.getRentID().toLowerCase().equals("no")) {
@@ -352,7 +352,7 @@ public class CommandLineUi {
               + returnModel.getDailyInsuranceRateCharges());
       System.out.println("Hourly costs: $" + returnModel.getHourRateCharges() + "Hourly insurance costs: $"
               + returnModel.getHourlyInsuranceRateCharges());
-      // TODO kilo charges
+      System.out.println("Distance costs per km: $" + returnModel.getKiloRateCharges());
     } else {
       Util.printWarning("Vehicle return failed.");
     }
