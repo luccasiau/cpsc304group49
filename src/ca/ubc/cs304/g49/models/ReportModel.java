@@ -45,8 +45,8 @@ public class ReportModel {
             char[] vtc = new char[15-typename.length()];
             Arrays.fill(vtc, ' ');
             String formatted_type = new String(vtc);
-            System.out.printf("Location: %s    Vehicles name: %s    Vehicles returned: %d    Revenue: $%d %n",
-                    location, formatted_type, count, revenue);
+            System.out.printf("Location: %s    Vehicles name: %s%sVehicles returned: %d    Revenue: $%d %n",
+                    location, typename, formatted_type, count, revenue);
         }
 
 
