@@ -341,6 +341,8 @@ public class CommandLineUi {
           return;
         }
       }
+    } else {
+      return;
     }
 
     RentModel rentalModel = delegate.fetchRental(returnModel.getRentID());
