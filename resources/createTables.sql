@@ -72,7 +72,7 @@ CREATE TABLE rent (
 CREATE TABLE return (
     rentid      VARCHAR(20)     NOT NULL,
     returnDate  DATE            NOT NULL,
-    odomoter    INT             NOT NULL,
+    odometer    INT             NOT NULL,
     fullTalk    SMALLINT        NOT NULL,
     revenue     FLOAT           NOT NULL,
     FOREIGN KEY (rentid)  REFERENCES rent,
