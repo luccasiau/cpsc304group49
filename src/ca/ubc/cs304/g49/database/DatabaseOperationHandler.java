@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Calendar;
+
 
 public class DatabaseOperationHandler implements CommandLineUiDelegate {
   private DatabaseConnectionHandler dbConnectionHandler;
@@ -705,8 +705,8 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
    */
   public void generateReturnReportPerVehicleBranch(Date date){
 //    String date = new java.sql.Date(Calendar.getInstance().getTime().getTime()).toString();
-    HashSet<ReportModel>reports = new HashSet<ReportModel>();
     try {
+        //Grouping by branch & vehicle type
       PreparedStatement ps = dbConnectionHandler.getConnection()
               .prepareStatement(
                       "SELECT V.location, V.city, V.vtname, count(*), sum(R2.revenue) " +
