@@ -302,24 +302,26 @@ public class CommandLineUi {
 
   private void handleReturn() {
     ReturnModel returnModel = new ReturnModel();
-    returnModel.readRentID(bufferedReader);
-    if (delegate.fetchReturn(returnModel.getRentID()) != null) {
-      System.out.println("This vehicle has already been returned.");
-      return;
-    }
-    RentModel rentalModel = delegate.fetchRental(returnModel.getRentID());
+
     String in = "";
-    while (rentalModel == null && !in.toLowerCase().equals("y")) {
-      while (!in.toLowerCase().equals("y") && !in.toLowerCase().equals("n")) {
-        System.out.print("The rentID you entered was not found. Do you have a rentID? [y/n]: ");
-        in = Util.readString(bufferedReader, 255, true).orElse("");
-      }
-      if (in.equals("n")) return;
-
-      returnModel.readRentID(bufferedReader);
-      rentalModel = delegate.fetchRental(returnModel.getRentID());
+    while (!in.toLowerCase().equals("y") && !in.toLowerCase().equals("n")) {
+      System.out.print("Do you have a rentID [y/n]? ");
+      in = Util.readString(bufferedReader, 255, true).orElse("");
     }
 
+    if (in.equals("y")) {
+      returnModel.readRentID(bufferedReader);
+      while (delegate.fetchReservation(returnModel.getRentID()) == null) {
+        System.out.println("Rental not found. Enter new rentID or type \"no\" in case");
+        returnModel.readRentID(bufferedReader);
+        if (returnModel.getRentID().toLowerCase().equals("no")) {
+          returnModel.setRentID("");
+          return;
+        }
+      }
+    }
+
+    RentModel rentalModel = delegate.fetchRental(returnModel.getRentID());
     VehicleModel vehicle = null;
     while (vehicle == null) {
       vehicle = delegate.fetchVehicle(rentalModel.getVlicense());
@@ -350,6 +352,7 @@ public class CommandLineUi {
               + returnModel.getDailyInsuranceRateCharges());
       System.out.println("Hourly costs: $" + returnModel.getHourRateCharges() + "Hourly insurance costs: $"
               + returnModel.getHourlyInsuranceRateCharges());
+      // TODO kilo charges
     } else {
       Util.printWarning("Vehicle return failed.");
     }

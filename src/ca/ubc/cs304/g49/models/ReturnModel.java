@@ -59,6 +59,10 @@ public class ReturnModel {
         this.fullTank = fullTank;
     }
 
+    public void setRentID(String rentID) {
+        this.rentID = rentID;
+    }
+
     public void readRentID(BufferedReader reader) {
         rentID = Util.genericStringRead(
                 reader,
