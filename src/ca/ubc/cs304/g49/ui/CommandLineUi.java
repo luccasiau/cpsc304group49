@@ -6,7 +6,6 @@ import ca.ubc.cs304.g49.models.*;
 import ca.ubc.cs304.g49.util.FieldSizes;
 import ca.ubc.cs304.g49.util.Util;
 
-import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.Date;
@@ -93,9 +92,6 @@ public class CommandLineUi {
           case 4:
             handleAvailableVehicles();
             break;
-          case 5:
-            handleReturn();
-            break;
           case 6:
             handleDailyRentals();
             break;
@@ -107,6 +103,9 @@ public class CommandLineUi {
             break;
           case 9:
             handleDailyReturnsBranch();
+          case 5:
+            handleReturn();
+            break;
           case 10:
             handleQuit();
             break;
@@ -353,6 +352,7 @@ public class CommandLineUi {
     }
   }
 
+  //New rentals within that day
   private void handleDailyRentals(){}
   private void handleDailyRentalsBranch(){}
   private void handleDailyReturnsBranch(){}
