@@ -572,13 +572,9 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                   rs.getInt(5)); //revenue
           reports.add(newReport);
         }
-        int grandTotal = 0;
         for(ReportModel rm :  reports){
-          grandTotal += rm.getRevenue();
           rm.printReportBranch();
         }
-        System.out.printf("Grand total: %d%n", grandTotal);
-
 
       } else {
         System.out.printf("\nNo returned vehicles for date %s\n", date.toString());
@@ -626,10 +622,8 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
         }
         int grandTotal = 0;
         for(ReportModel rm :  reports){
-          grandTotal += rm.getRevenue();
           rm.printReportBranchVehicleType();
         }
-        System.out.printf("Grand total: %d%n", grandTotal);
 
 
         } else {
