@@ -919,7 +919,6 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                                  "GROUP BY V.location, V.city "
                  );
          ps.setDate(1, date); //set today date
-       System.out.println("[RentalReportbranch]: done query");
 
          ResultSet rs = ps.executeQuery();
          if (rs.isBeforeFirst()) {
