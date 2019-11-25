@@ -882,7 +882,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                  .prepareStatement(
                          "SELECT V.location, V.city, V.vtname, count(*) " +
                                  "FROM Rent R, Vehicle V " +
-                                 "WHERE R.vlicense = V.vlicense R.startdate = ? " +
+                                 "WHERE R.vlicense = V.vlicense AND R.startdate = ? " +
                                  "GROUP BY V.location, V.city, V.vtname "
                  );
          ps.setDate(1, date); //set today date
