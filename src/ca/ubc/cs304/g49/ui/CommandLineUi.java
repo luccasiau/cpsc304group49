@@ -381,7 +381,22 @@ public class CommandLineUi {
   }
   private void handleDailyRentals(){}
   private void handleDailyRentalsBranch(){}
-  private void handleDailyReturnsBranch(){}
+  private void handleDailyReturnsBranch(){
+    String location = Util.genericStringRead(bufferedReader,
+            "Branch location?",
+            25,
+            false);
+    String city = Util.genericStringRead(bufferedReader,
+            "Branch city?",
+            25,
+            false);
+    Date minDate = Date.valueOf("1990-01-01");
+    Date curdate = Util.genericDateRead(bufferedReader, "Which day would you like to generate Daily Returns for? [yyyy-mm-dd]", minDate);
+    delegate.generateReturnForBranchByVehicle(location, city, curdate);
+    delegate.generateReturnForBranch(location, city, curdate);
+
+
+  }
 
   //Must generate report for any day.
   private void handleDailyReturns() {

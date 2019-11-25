@@ -4,6 +4,7 @@ import ca.ubc.cs304.g49.util.FieldSizes;
 import ca.ubc.cs304.g49.util.Util;
 
 import java.io.BufferedReader;
+import java.lang.reflect.Field;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +31,17 @@ public class ReportModel {
             return revenue;
         }
 
+        public void printReturnEntireReportBranch(){
+            System.out.printf("branch count: %d    Total revenue $%d%n", count, revenue);
+        }
+        public void printReturnReportBranch(){
+            char[] vtc = new char[FieldSizes.MAXIMUM_VTNAME_SIZE-typename.length()];
+            Arrays.fill(vtc, ' ');
+            String formatted_type = new String(vtc);
+            System.out.printf("Vehicles name: %s%sVehicles returned: %d    Revenue: $%d %n",
+                    typename, formatted_type, count, revenue);
+        }
+
         public void printReportCompany(){
             System.out.printf("Company count: %d    Total revenue $%d%n", count, revenue);
         }
@@ -41,8 +53,7 @@ public class ReportModel {
 
         // location city vehiclename num vehicles revenue
         public void printReportBranchVehicleType(){
-
-            char[] vtc = new char[15-typename.length()];
+            char[] vtc = new char[FieldSizes.MAXIMUM_VTNAME_SIZE-typename.length()];
             Arrays.fill(vtc, ' ');
             String formatted_type = new String(vtc);
             System.out.printf("Location: %s    Vehicles name: %s%sVehicles returned: %d    Revenue: $%d %n",
