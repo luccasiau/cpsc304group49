@@ -879,13 +879,14 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                          "SELECT V.location, V.city, V.vtname, count(*) " +
                                  "FROM Rent R, Vehicle V " +
                                  "WHERE R.startdate = ? AND R.vlicense = V.vlicense " +
-                                 "GROUP BY V.location, V.city, V.vtname "+
-                                 "ORDER BY V.location, V.city"
+                                 "GROUP BY V.location, V.city, V.vtname "
                  );
          ps.setDate(1, curr); //set today date
+
          ResultSet rs = ps.executeQuery();
          if (rs.isBeforeFirst()) {
              while (rs.next()) { //for each row
+
                  ReportModel newReport = new ReportModel(curr,
                          rs.getString(1), //loc
                          rs.getString(2),  //city
@@ -913,10 +914,10 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
          //Grouping by branch & vehicle type
          PreparedStatement ps = dbConnectionHandler.getConnection()
                  .prepareStatement(
-                         "SELECT V.location, V.city, count(*) " +
+                         "SELECT V.location, V.city, V.vtname, count(*) " +
                                  "FROM Rent R, Vehicle V " +
-                                 "WHERE R.vlicense = V.vlicense AND R.startdate = ? " +
-                                 "GROUP BY V.location, V.city "
+                                 "WHERE R.vlicense = V.vlicense R.startdate = ? " +
+                                 "GROUP BY V.location, V.city, V.vtname "
                  );
          ps.setDate(1, date); //set today date
 
@@ -927,8 +928,8 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                  ReportModel newReport = new ReportModel(date,
                          rs.getString(1), //loc
                          rs.getString(2),  //city
-                         "", // vtname
-                         rs.getInt(3), //count
+                         rs.getString(3), // vtname
+                         rs.getInt(4), //count
                          0); //revenue
                  reports.add(newReport);
 
@@ -960,7 +961,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                  );
          ps.setDate(1, date); //set today date
 
-       ResultSet rs = ps.executeQuery();
+         ResultSet rs = ps.executeQuery();
          if (rs.isBeforeFirst()) {
              while(rs.next()) { //for each row
 
@@ -978,7 +979,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                  rm.printRentalCompany();
              }
          } else {
-             System.out.printf("\nNo rented vehicles for date %s\n", date.toString());
+             System.out.printf("\nNo returned vehicles for date %s\n", date.toString());
          }
          dbConnectionHandler.getConnection().commit();
          rs.close();
@@ -999,7 +1000,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                     .prepareStatement(
                             "SELECT V.vtname, count(*) " +
                                     "FROM Rent R, Vehicle V " +
-                                    "WHERE R.startdate = ? AND R.vlicense = V.vlicense AND V.location = ? AND V.city = ? " +
+                                    "WHERE R.startdate = ? R.vlicense = V.vlicense AND V.location = ? AND V.city = ? " +
                                     "GROUP BY V.vtname "
                     );
             ps.setDate(1, date);
@@ -1045,7 +1046,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                     .prepareStatement(
                             "SELECT count(*) " +
                                     "FROM Rent R, Vehicle V " +
-                                    "WHERE R.startdate = ? AND V.vlicense = R.vlicense AND V.location = ? AND V.city = ? "
+                                    "WHERE R.startdate = ? AND V.vlicense = R.vlicense and V.location = ? AND V.city = ? "
                     );
             ps.setDate(1, date); //set today date
             ps.setString(2, location);
