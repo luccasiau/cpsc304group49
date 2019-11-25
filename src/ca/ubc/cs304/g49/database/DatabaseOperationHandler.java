@@ -704,7 +704,8 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
    */
   public void generateReturnReportPerVehicleBranch(Date date){
 //    String date = new java.sql.Date(Calendar.getInstance().getTime().getTime()).toString();
-    try {
+      HashSet<ReportModel>reports = new HashSet<ReportModel>();
+      try {
         //Grouping by branch & vehicle type
       PreparedStatement ps = dbConnectionHandler.getConnection()
               .prepareStatement(

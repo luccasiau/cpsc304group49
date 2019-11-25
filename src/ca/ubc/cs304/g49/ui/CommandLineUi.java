@@ -408,35 +408,6 @@ public class CommandLineUi {
     delegate.generateReturnCompany(currDate);
   }
 
-  //Must generate report for any day.
-  private void handleDailyReturns() {
-    Date minDate = Date.valueOf("1990-01-01");
-    Date currDate = Util.genericDateRead(bufferedReader, "Which day would you like to generate Daily Returns for? [yyyy-mm-dd] ", minDate);
-    delegate.generateReturnReportPerVehicleBranch(currDate);
-    delegate.generateReturnReportBranch(currDate);
-    delegate.generateReturnCompany(currDate);
-  private void handleDailyReturns(){
-      Date minDate = Date.valueOf("1990-01-01");
-      Date currDate = Util.genericDateRead(bufferedReader, "Which day would you like to generate Daily Returns for? [yyyy-mm-dd] ", minDate);
-    ResultSet rs = delegate.generateReturnReport(currDate);
-      try {
-          if(rs.getFetchSize() >0){
-              while(rs.next()){ //for each row
-                  System.out.println("Location: " + rs.getString(0) +
-                          " City: " + rs.getString(1) +
-                          " vehicle type name :" + rs.getString(2) +
-                          " Count: " + rs.getInt(3) +
-                          " Sum: " + rs.getInt(4));
-              }
-          }
-          else {
-              System.out.printf("No returned vehicles for date %s%n", currDate);
-          }
-      } catch (SQLException e) {
-          e.printStackTrace();
-      }
-  }
-
   private void handleQuit() {
     // TODO
     System.out.println("\n\nQuitting now. Bye!\n");
