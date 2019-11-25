@@ -6,6 +6,7 @@ import ca.ubc.cs304.g49.util.Util;
 import java.io.BufferedReader;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class ReportModel {
@@ -40,8 +41,12 @@ public class ReportModel {
 
         // location city vehiclename num vehicles revenue
         public void printReportBranchVehicleType(){
+
+            char[] vtc = new char[15-typename.length()];
+            Arrays.fill(vtc, ' ');
+            String formatted_type = new String(vtc);
             System.out.printf("Location: %s    Vehicles name: %s    Vehicles returned: %d    Revenue: $%d %n",
-                    location, typename, count, revenue);
+                    location, formatted_type, count, revenue);
         }
 
 
