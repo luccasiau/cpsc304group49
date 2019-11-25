@@ -7,6 +7,7 @@ import ca.ubc.cs304.g49.util.FieldSizes;
 import ca.ubc.cs304.g49.util.Util;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -22,6 +23,7 @@ public class CommandLineUi {
 
   private CommandLineUiDelegate delegate;
   private BufferedReader bufferedReader = null;
+  private DatabaseConnectionHandler dbHandler;
 
   public CommandLineUi(CommandLineUiDelegate delegate) {
     this.delegate = delegate;
@@ -31,6 +33,7 @@ public class CommandLineUi {
    * Login
    */
   public void login(DatabaseConnectionHandler dbHandler) {
+    this.dbHandler = dbHandler;
     if (bufferedReader == null) {
       bufferedReader = new BufferedReader(new InputStreamReader(System.in));
     }
@@ -412,7 +415,17 @@ public class CommandLineUi {
   }
 
   private void handleQuit() {
-    // TODO
     System.out.println("\n\nQuitting now. Bye!\n");
+
+    if (bufferedReader != null) {
+      try {
+        bufferedReader.close();
+      } catch (IOException e) {
+        System.out.println("IOException!");
+      }
+    }
+
+    this.dbHandler.close();
+    System.exit(0);
   }
 }
