@@ -92,6 +92,9 @@ public class CommandLineUi {
           case 4:
             handleAvailableVehicles();
             break;
+          case 5:
+            handleReturn();
+            break;
           case 6:
             handleDailyRentals();
             break;
@@ -103,8 +106,6 @@ public class CommandLineUi {
             break;
           case 9:
             handleDailyReturnsBranch();
-          case 5:
-            handleReturn();
             break;
           case 10:
             handleQuit();
