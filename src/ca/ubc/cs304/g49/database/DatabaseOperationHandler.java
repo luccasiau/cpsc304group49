@@ -881,12 +881,13 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
          //Grouping by branch & vehicle type
          PreparedStatement ps = dbConnectionHandler.getConnection()
                  .prepareStatement(
-                         "SELECT V.location, V.city, count(*) " +
+                         "SELECT V.location, V.city, V.vtname, count(*) " +
                                  "FROM Rent R, Vehicle V " +
-                                 "WHERE R.vlicense = V.vlicense AND R.startdate = ? " +
-                                 "GROUP BY V.location, V.city "
+                                 "WHERE R.vlicense = V.vlicense R.startdate = ? " +
+                                 "GROUP BY V.location, V.city, V.vtname "
                  );
          ps.setDate(1, date); //set today date
+       System.out.println("[RentalReportbranch]: done query");
 
          ResultSet rs = ps.executeQuery();
          if (rs.isBeforeFirst()) {
