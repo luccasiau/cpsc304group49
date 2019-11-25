@@ -516,7 +516,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
 
       ResultSet rs = ps.executeQuery();
 
-      if (rs.next()) {
+      while (rs.next()) {
         // System.out.println("DEBUG: FOUND SOMETHING");
         VehicleModel newVehicle =  new VehicleModel(rs.getString("vlicense"),
                 rs.getString("vtname"),

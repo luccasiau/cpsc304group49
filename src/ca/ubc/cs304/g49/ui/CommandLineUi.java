@@ -285,6 +285,7 @@ public class CommandLineUi {
     Set<String> vtnamesSet = new HashSet<>();
     Set<String[]> locationAndCitiesSet = new HashSet<>();
     ArrayList<VehicleModel> vehicles = delegate.fetchAllVehicles();
+    System.out.println("DEBUG: " + vehicles.size());
 
     if (vm.getVtname().equals("")) {
       for (VehicleModel vehicle : vehicles) {

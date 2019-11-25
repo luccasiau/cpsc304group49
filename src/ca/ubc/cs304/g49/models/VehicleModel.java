@@ -87,11 +87,13 @@ public class VehicleModel {
             "Enter location: ",
             FieldSizes.MAXIMUM_LOCATION_SIZE,
             true);
-     city = Util.genericStringRead(
-            reader,
-            "Enter branch city: ",
-            FieldSizes.MAXIMUM_CITY_SIZE,
-            true);
+     if (!location.equals("")) {
+       city = Util.genericStringRead(
+               reader,
+               "Enter branch city: ",
+               FieldSizes.MAXIMUM_CITY_SIZE,
+               true);
+     }
      start = Util.genericDateRead(
             reader,
             "Enter start date (yyyy-mm-dd): ",
