@@ -30,18 +30,18 @@ public class ReportModel {
         }
 
         public void printReportCompany(){
-            System.out.printf("Company: total count:%d total revenue $%d%n", count, revenue);
+            System.out.printf("Company count: %d    Total revenue $%d%n", count, revenue);
         }
 
         public void printReportBranch(){
-                System.out.printf("Num of vehicles returned %d revenue: $%d location: %s city: %s%n",
-                        count, revenue, location, city);
+            System.out.printf("Location: %s    Vehicles returned: %d    Revenue: $%d %n",
+                    location, count, revenue);
             }
 
-
+        // location city vehiclename num vehicles revenue
         public void printReportBranchVehicleType(){
-            System.out.printf("Num of vehicles returned %d revenue: $%d vehicle category: %s location: %s city: %s%n",
-                    count, revenue, typename, location, city);
+            System.out.printf("Location: %s    Vehicles name: %s    Vehicles returned: %d    Revenue: $%d %n",
+                    location, typename, count, revenue);
         }
 
 

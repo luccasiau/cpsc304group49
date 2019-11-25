@@ -568,8 +568,8 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                   rs.getString(1), //loc
                   rs.getString(2),  //city
                   "", // vtname
-                  rs.getInt(4), //count
-                  rs.getInt(5)); //revenue
+                  rs.getInt(3), //count
+                  rs.getInt(4)); //revenue
           reports.add(newReport);
         }
         for(ReportModel rm :  reports){
