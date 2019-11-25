@@ -303,7 +303,7 @@ public class CommandLineUi {
   private void handleReturn() {
     ReturnModel returnModel = new ReturnModel();
     returnModel.readRentID(bufferedReader);
-    if (delegate.fetchRental(returnModel.getRentID()) != null) {
+    if (delegate.fetchReturn(returnModel.getRentID()) != null) {
       System.out.println("This vehicle has already been returned.");
       return;
     }
@@ -332,7 +332,7 @@ public class CommandLineUi {
     returnModel.readOdometer(bufferedReader, vehicle.getOdometer());
     returnModel.readReturnDate(bufferedReader, rentalModel.getStartdate());
     returnModel.readFullTank(bufferedReader);
-    returnModel.calculateRevenue(vehicleTypeModel, rentalModel.getStartdate(), returnModel.getReturnDate());
+    returnModel.calculateRevenue(vehicleTypeModel, rentalModel.getStartdate(), returnModel.getReturnDate(), vehicle.getOdometer());
 
     // Insert into database.
     if (delegate.insertReturn(returnModel)) {
@@ -344,6 +344,12 @@ public class CommandLineUi {
       System.out.printf("Reservation confirmation number: %s%n", rentalModel.getRentid());
       System.out.printf("Date of Return: %s%n",returnModel.getReturnDate());
       System.out.printf("Total cost for rental: %s%n", returnModel.getRevenue());
+      System.out.println("Weekly costs: " + returnModel.getWeeklyRateCharges() + "Weekly insurance costs: "
+              + returnModel.getWeeklyInsuranceRateCharges());
+      System.out.println("Daily costs: " + returnModel.getDayRateCharges() + "Daily insurance costs: "
+              + returnModel.getDailyInsuranceRateCharges());
+      System.out.println("Hourly costs: " + returnModel.getHourRateCharges() + "Hourly insurance costs: "
+              + returnModel.getHourlyInsuranceRateCharges());
     } else {
       Util.printWarning("Vehicle return failed.");
     }

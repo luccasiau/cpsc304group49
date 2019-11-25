@@ -10,8 +10,44 @@ public class ReturnModel {
     private String rentID;
     private Date returnDate;
     private int odometer;
-    private float revenue;
     private Boolean fullTank;
+    private float revenue;
+
+    public float getWeeklyRateCharges() {
+        return weeklyRateCharges;
+    }
+
+    public float getDayRateCharges() {
+        return dayRateCharges;
+    }
+
+    public float getHourRateCharges() {
+        return hourRateCharges;
+    }
+
+    public float getKiloRateCharges() {
+        return kiloRateCharges;
+    }
+
+    public float getWeeklyInsuranceRateCharges() {
+        return weeklyInsuranceRateCharges;
+    }
+
+    public float getHourlyInsuranceRateCharges() {
+        return hourlyInsuranceRateCharges;
+    }
+
+    public float getDailyInsuranceRateCharges() {
+        return dailyInsuranceRateCharges;
+    }
+
+    private float weeklyRateCharges;
+    private float dayRateCharges;
+    private float hourRateCharges;
+    private float kiloRateCharges;
+    private float weeklyInsuranceRateCharges;
+    private float hourlyInsuranceRateCharges;
+    private float dailyInsuranceRateCharges;
 
     public ReturnModel() {}
 
@@ -46,7 +82,7 @@ public class ReturnModel {
                 prevOdometer);
     }
 
-    public void calculateRevenue(VehicleTypeModel vehicleTypeModel, Date startDate, Date returnDate) {
+    public void calculateRevenue(VehicleTypeModel vehicleTypeModel, Date startDate, Date returnDate, int startingOdometer) {
         long hoursInMS = 1000 * 60 * 60;
         long daysInMS = hoursInMS * 24;
         long weeksInMS = daysInMS * 7;
@@ -60,12 +96,23 @@ public class ReturnModel {
 
         long hoursElapsed = millisecondsElapsed / hoursInMS;
 
-        revenue = weeksElapsed * vehicleTypeModel.getWeeklyRate()
-                + weeksElapsed * vehicleTypeModel.getWinsuranceRate()
-                + daysElapsed * vehicleTypeModel.getDayRate()
-                + daysElapsed * vehicleTypeModel.getDinsuranceRate()
-                + hoursElapsed * vehicleTypeModel.getHourRate()
-                + hoursElapsed * vehicleTypeModel.getHinsuranceRate();
+        int distanceTravelled = odometer - startingOdometer;
+
+        weeklyRateCharges = weeksElapsed * vehicleTypeModel.getWeeklyRate();
+        weeklyInsuranceRateCharges = weeksElapsed * vehicleTypeModel.getWinsuranceRate();
+        dayRateCharges = daysElapsed * vehicleTypeModel.getDayRate();
+        dailyInsuranceRateCharges = daysElapsed * vehicleTypeModel.getDinsuranceRate();
+        hourRateCharges = hoursElapsed * vehicleTypeModel.getHourRate();
+        hourlyInsuranceRateCharges = hoursElapsed * vehicleTypeModel.getHinsuranceRate();
+        kiloRateCharges = distanceTravelled * vehicleTypeModel.getKiloRate();
+
+        revenue = weeklyRateCharges
+                + weeklyInsuranceRateCharges
+                + dayRateCharges
+                + dailyInsuranceRateCharges
+                + hourRateCharges
+                + hourlyInsuranceRateCharges
+                + kiloRateCharges;
     }
 
     public void readFullTank(BufferedReader reader) {
