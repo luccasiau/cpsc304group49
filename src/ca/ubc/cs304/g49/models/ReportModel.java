@@ -31,6 +31,35 @@ public class ReportModel {
             return revenue;
         }
 
+    public void printRentalForBranch(){
+            System.out.printf("Branch %s, %s rental count: %d\n", location, city,  count);
+    }
+    public void printRentalForBranchByVehicle(){
+            char[] vtc = new char[FieldSizes.MAXIMUM_VTNAME_SIZE-typename.length()];
+            Arrays.fill(vtc, ' ');
+            String formatted_type = new String(vtc);
+            System.out.printf("Location: %s    City: %s    Vehicles name: %s%sVehicles rented: %d\n",
+                    location, city, typename, formatted_type, count);
+
+        }
+
+    public void printRentalCompany(){
+        System.out.printf("Company Rental count: %d%n", count);
+    }
+
+    public void printRentalReportBranch(){
+            System.out.printf("Location: %s    City: %s    Vehicles rented: %d\n",
+                    location, city, count);
+        }
+        public void printRentalBranchVehicleType(){
+            char[] vtc = new char[FieldSizes.MAXIMUM_VTNAME_SIZE-typename.length()];
+            Arrays.fill(vtc, ' ');
+            String formatted_type = new String(vtc);
+            System.out.printf("Location: %s    City: %s    Vehicles name: %s%sVehicles rented: %d\n",
+                    location, city, typename, formatted_type, count);
+
+}
+
         public void printReturnEntireReportBranch(){
             System.out.printf("No. reserved: %d    Total revenue $%d%n", count, revenue);
         }
@@ -38,7 +67,7 @@ public class ReportModel {
             char[] vtc = new char[FieldSizes.MAXIMUM_VTNAME_SIZE-typename.length()];
             Arrays.fill(vtc, ' ');
             String formatted_type = new String(vtc);
-            System.out.printf("Vehicles name: %s%sVehicles returned: %d    Revenue: $%d %n",
+            System.out.printf("Vehicles name: %s%sVehicles returned: %d    Revenue: $%d \n",
                     typename, formatted_type, count, revenue);
         }
 
@@ -47,7 +76,7 @@ public class ReportModel {
         }
 
         public void printReportBranch(){
-            System.out.printf("Location: %s    Vehicles returned: %d    Revenue: $%d %n",
+            System.out.printf("Location: %s    Vehicles returned: %d    Revenue: $%d \n",
                     location, count, revenue);
             }
 
@@ -56,7 +85,7 @@ public class ReportModel {
             char[] vtc = new char[FieldSizes.MAXIMUM_VTNAME_SIZE-typename.length()];
             Arrays.fill(vtc, ' ');
             String formatted_type = new String(vtc);
-            System.out.printf("Location: %s    Vehicles name: %s%sVehicles returned: %d    Revenue: $%d %n",
+            System.out.printf("Location: %s    Vehicles name: %s%sVehicles returned: %d    Revenue: $%d \n",
                     location, typename, formatted_type, count, revenue);
         }
 
