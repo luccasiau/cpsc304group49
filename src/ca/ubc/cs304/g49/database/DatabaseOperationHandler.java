@@ -674,7 +674,6 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
        for(ReportModel rm :  reports) {
          rm.printReturnReportBranch();
        }
-       System.out.println("leaving generatereturnbranch");
      } else {
        System.out.printf("\nNo returned vehicles for date %s\n", date.toString());
      }
@@ -713,13 +712,10 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
 
        }
        System.out.printf("Returns for Branch %s, %s%n", location, city);
-       int grandTotal = 0;
        for(ReportModel rm :  reports){
-         grandTotal += rm.getRevenue();
          rm.printReturnEntireReportBranch();
        }
 
-       System.out.printf("Grand total: %d%n", grandTotal);
 
      } else {
        System.out.printf("\nNo returned vehicles for date %s\n", date.toString());

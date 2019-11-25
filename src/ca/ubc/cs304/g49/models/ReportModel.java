@@ -32,7 +32,7 @@ public class ReportModel {
         }
 
         public void printReturnEntireReportBranch(){
-            System.out.printf("branch count: %d    Total revenue $%d%n", count, revenue);
+            System.out.printf("No. reserved: %d    Total revenue $%d%n", count, revenue);
         }
         public void printReturnReportBranch(){
             char[] vtc = new char[FieldSizes.MAXIMUM_VTNAME_SIZE-typename.length()];
