@@ -32,7 +32,7 @@ public class ReportModel {
         }
 
     public void printRentalForBranch(){
-            System.out.printf("Branch %s, %s rental count: %d\n", count);
+            System.out.printf("Branch %s, %s rental count: %d\n", location, city,  count);
     }
     public void printRentalForBranchByVehicle(){
             char[] vtc = new char[FieldSizes.MAXIMUM_VTNAME_SIZE-typename.length()];
