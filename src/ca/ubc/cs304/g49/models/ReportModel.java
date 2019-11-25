@@ -55,8 +55,8 @@ public class ReportModel {
             char[] vtc = new char[FieldSizes.MAXIMUM_VTNAME_SIZE-typename.length()];
             Arrays.fill(vtc, ' ');
             String formatted_type = new String(vtc);
-            System.out.printf("Location: %s    Vehicles name: %s%sVehicles rented: %d\n",
-                    location, typename, formatted_type, count);
+            System.out.printf("Location: %s    City: %s    Vehicles name: %s%sVehicles rented: %d\n",
+                    location, city, typename, formatted_type, count);
 
 }
 
