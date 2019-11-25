@@ -6,9 +6,11 @@ import ca.ubc.cs304.g49.models.*;
 import ca.ubc.cs304.g49.util.FieldSizes;
 import ca.ubc.cs304.g49.util.Util;
 
-import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -16,7 +18,7 @@ import java.util.Optional;
  * Handles user interaction with CLI.
  */
 public class CommandLineUi {
-  private static final int QUIT_INPUT = 6;  // FIXME: Update this as needed.
+  private static final int QUIT_INPUT = 10;  // FIXME: Update this as needed.
 
   private CommandLineUiDelegate delegate;
   private BufferedReader bufferedReader = null;
@@ -66,8 +68,12 @@ public class CommandLineUi {
       System.out.println("2. [Customer] Make new reservation.");
       System.out.println("3. [Clerk] Make new rental.");
       System.out.println("4. [Customer] View number of available vehicles");
-      System.out.println("5. [Clerk] Return a vehicle.");
-      System.out.println("6. Quit.");
+      System.out.println("5. [Clerk] Return a vehicle");
+      System.out.println("6. [Clerk] Generate daily rentals");
+      System.out.println("7. [Clerk] Generate daily rentals for Branch");
+      System.out.println("8. [Clerk] Generate daily returns");
+      System.out.println("9. [Clerk] Generate daily returns for Branch");
+      System.out.println("10. Quit.");
       System.out.print("Please choose one of the above options: ");
 
       inputOptional = Util.readInteger(bufferedReader, false);
@@ -90,6 +96,18 @@ public class CommandLineUi {
             handleReturn();
             break;
           case 6:
+            handleDailyRentals();
+            break;
+          case 7:
+            handleDailyRentalsBranch();
+            break;
+          case 8:
+            handleDailyReturns();
+            break;
+          case 9:
+            handleDailyReturnsBranch();
+            break;
+          case 10:
             handleQuit();
             break;
           default:
@@ -360,6 +378,34 @@ public class CommandLineUi {
     } else {
       Util.printWarning("Vehicle return failed.");
     }
+  }
+  //New rentals within that day
+  private void handleDailyRentals(){}
+  private void handleDailyRentalsBranch(){}
+  private void handleDailyReturnsBranch(){
+    String location = Util.genericStringRead(bufferedReader,
+            "Branch location?",
+            25,
+            false);
+    String city = Util.genericStringRead(bufferedReader,
+            "Branch city?",
+            25,
+            false);
+    Date minDate = Date.valueOf("1990-01-01");
+    Date curdate = Util.genericDateRead(bufferedReader, "Which day would you like to generate Daily Returns for? [yyyy-mm-dd]", minDate);
+    delegate.generateReturnForBranchByVehicle(location, city, curdate);
+    delegate.generateReturnForBranch(location, city, curdate);
+
+
+  }
+
+  //Must generate report for any day.
+  private void handleDailyReturns() {
+    Date minDate = Date.valueOf("1990-01-01");
+    Date currDate = Util.genericDateRead(bufferedReader, "Which day would you like to generate Daily Returns for? [yyyy-mm-dd] ", minDate);
+    delegate.generateReturnReportPerVehicleBranch(currDate);
+    delegate.generateReturnReportBranch(currDate);
+    delegate.generateReturnCompany(currDate);
   }
 
   private void handleQuit() {
