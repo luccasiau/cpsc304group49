@@ -32,6 +32,7 @@ public class ReportModel {
         }
 
     public void printRentalForBranch(){
+            Util.printWarning("entered print rental for branch");
             System.out.printf("Branch %s, %s rental count: %d\n", location, city,  count);
     }
     public void printRentalForBranchByVehicle(){
