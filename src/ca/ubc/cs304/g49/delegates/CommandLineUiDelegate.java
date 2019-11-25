@@ -28,7 +28,13 @@ public interface CommandLineUiDelegate {
       String vtname, String location, String city);
   int countActiveRentalsAndReservations(
       String vtname, String location, String city, Date start, Date end);
+
+  // daily return report (vtname + branch / branch / company wide)
   void generateReturnReportPerVehicleBranch(Date curr);
   void  generateReturnReportBranch(Date date);
   void  generateReturnCompany(Date date);
+
+  //return for branch
+  void generateReturnForBranchByVehicle(String location, String city, Date date);
+  void generateReturnForBranch(String location, String city, Date date);
 }

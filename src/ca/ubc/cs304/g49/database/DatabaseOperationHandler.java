@@ -504,7 +504,8 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
         countActiveReservations(vtname, location, city, start, end);
   }
 
-  public void generateReturnCompany(Date date){ HashSet<ReportModel>reports = new HashSet<ReportModel>();
+  public void generateReturnCompany(Date date){
+    HashSet<ReportModel>reports = new HashSet<ReportModel>();
     try {
       //Grouping by branch & vehicle type
       PreparedStatement ps = dbConnectionHandler.getConnection()
@@ -547,6 +548,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
       dbConnectionHandler.rollbackConnection();
       Util.printException(e.getMessage());
     }}
+
 
   public void generateReturnReportBranch(Date date){
     HashSet<ReportModel>reports = new HashSet<ReportModel>();
@@ -620,12 +622,9 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
           reports.add(newReport);
 
         }
-        int grandTotal = 0;
         for(ReportModel rm :  reports){
           rm.printReportBranchVehicleType();
         }
-
-
         } else {
         System.out.printf("\nNo returned vehicles for date %s\n", date.toString());
       }
@@ -638,5 +637,99 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
     }
   }
 
+  /**
+   * generate daily return for branch, group by vtname
+   * @param location
+   * @param city
+   * @param date
+   */
+ public void generateReturnForBranchByVehicle(String location, String city, Date date){
+   HashSet<ReportModel>reports = new HashSet<ReportModel>();
+   try {
+     //Grouping by branch & vehicle type
+     PreparedStatement ps = dbConnectionHandler.getConnection()
+             .prepareStatement(
+                     "SELECT V.vtname, count(*), sum(R2.revenue) " +
+                             "FROM Rent R, Vehicle V, Return R2 " +
+                             "WHERE R2.rentId = R.rentId AND R2.returnDate = ? AND R.vlicense = V.vlicense AND R2.location = ? AND R2.city = ?" +
+                             "GROUP BY V.vtname "
+             );
+     ps.setDate(1, date);
+     ps.setString(2, location);
+     ps.setString(3, city);
+     ResultSet rs = ps.executeQuery();
+     if (rs.isBeforeFirst()) {
+       while(rs.next()) { //for each row
+
+         ReportModel newReport = new ReportModel(date,
+                 location, //loc
+                 city,  //city
+                 rs.getString(1), // vtname
+                 rs.getInt(2), //count
+                 rs.getInt(3)); //revenue
+         reports.add(newReport);
+
+       }
+       System.out.printf("Returns for Branch %s, %s%n", location, city);
+       for(ReportModel rm :  reports) {
+         rm.printReturnReportBranch();
+       }
+     } else {
+       System.out.printf("\nNo returned vehicles for date %s\n", date.toString());
+     }
+     dbConnectionHandler.getConnection().commit();
+     rs.close();
+     ps.close();
+   } catch (Exception e){
+     dbConnectionHandler.rollbackConnection();
+     Util.printException(e.getMessage());
+   }
+  }
+ public void generateReturnForBranch(String location, String city, Date date){
+   HashSet<ReportModel>reports = new HashSet<ReportModel>();
+   try {
+     //Grouping by branch & vehicle type
+     PreparedStatement ps = dbConnectionHandler.getConnection()
+             .prepareStatement(
+                     "SELECT count(*), sum(R2.revenue) " +
+                             "FROM Rent R, Return R2 " +
+                             "WHERE R2.rentId = R.rentId AND R2.returnDate = ? AND R2.location = ? AND R2.city = ?"
+             );
+     ps.setString(1, location);
+     ps.setString(2, city);
+     ResultSet rs = ps.executeQuery();
+     if (rs.isBeforeFirst()) {
+       while(rs.next()) { //for each row
+
+         ReportModel newReport = new ReportModel(date,
+                 location, //loc
+                 city,  //city
+                 "", // vtname
+                 rs.getInt(1), //count
+                 rs.getInt(2)); //revenue
+         reports.add(newReport);
+
+       }
+       System.out.printf("Returns for Branch %s, %s%n", location, city);
+
+       int grandTotal = 0;
+       for(ReportModel rm :  reports){
+         grandTotal += rm.getRevenue();
+         rm.printReturnEntireReportBranch();
+       }
+
+       System.out.printf("Grand total: %d%n", grandTotal);
+
+     } else {
+       System.out.printf("\nNo returned vehicles for date %s\n", date.toString());
+     }
+     dbConnectionHandler.getConnection().commit();
+     rs.close();
+     ps.close();
+   } catch (Exception e){
+     dbConnectionHandler.rollbackConnection();
+     Util.printException(e.getMessage());
+   }
+ }
 
 }
