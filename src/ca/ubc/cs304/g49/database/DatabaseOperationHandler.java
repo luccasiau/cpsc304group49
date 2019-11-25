@@ -849,7 +849,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                                  "GROUP BY V.location, V.city, V.vtname "
                  );
          ps.setDate(1, curr); //set today date
-
+       System.out.println("[RentalReportPerVehicle]: done query");
          ResultSet rs = ps.executeQuery();
          if (rs.isBeforeFirst()) {
              while (rs.next()) { //for each row
@@ -887,6 +887,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                                  "GROUP BY V.location, V.city, V.vtname "
                  );
          ps.setDate(1, date); //set today date
+       System.out.println("[RentalReportbranch]: done query");
 
          ResultSet rs = ps.executeQuery();
          if (rs.isBeforeFirst()) {
@@ -927,8 +928,9 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                                  "WHERE R.startdate = ? "
                  );
          ps.setDate(1, date); //set today date
+       System.out.println("[RentalReportCompany]: done query");
 
-         ResultSet rs = ps.executeQuery();
+       ResultSet rs = ps.executeQuery();
          if (rs.isBeforeFirst()) {
              while(rs.next()) { //for each row
 
