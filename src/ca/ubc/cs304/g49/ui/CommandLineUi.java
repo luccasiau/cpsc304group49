@@ -408,6 +408,8 @@ public class CommandLineUi {
   }
 
 
+  }
+  private void handleDailyRentalsBranch(){}
   private void handleDailyReturnsBranch(){
     String location = Util.genericStringRead(bufferedReader,
             "Enter branch location: ",
