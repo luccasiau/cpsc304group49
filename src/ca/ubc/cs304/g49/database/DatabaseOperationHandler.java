@@ -897,7 +897,6 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
              }
              for (ReportModel rm : reports) {
                 rm.printRentalBranchVehicleType();
-               System.out.println("\n");
              }
          }
      } catch (Exception e){
