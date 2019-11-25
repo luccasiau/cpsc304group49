@@ -881,10 +881,10 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
          //Grouping by branch & vehicle type
          PreparedStatement ps = dbConnectionHandler.getConnection()
                  .prepareStatement(
-                         "SELECT V.location, V.city, V.vtname, count(*) " +
+                         "SELECT V.location, V.city, count(*) " +
                                  "FROM Rent R, Vehicle V " +
                                  "WHERE R.vlicense = V.vlicense AND R.startdate = ? " +
-                                 "GROUP BY V.location, V.city, V.vtname "
+                                 "GROUP BY V.location, V.city "
                  );
          ps.setDate(1, date); //set today date
        System.out.println("[RentalReportbranch]: done query");
@@ -896,8 +896,8 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                  ReportModel newReport = new ReportModel(date,
                          rs.getString(1), //loc
                          rs.getString(2),  //city
-                         rs.getString(3), // vtname
-                         rs.getInt(4), //count
+                         "", // vtname
+                         rs.getInt(3), //count
                          0); //revenue
                  reports.add(newReport);
 
