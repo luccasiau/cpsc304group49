@@ -374,6 +374,10 @@ public class CommandLineUi {
 
     if (in.equals("y")) {
       returnModel.readRentID(bufferedReader);
+      if (delegate.fetchReturn(returnModel.getRentID()) != null) {
+        System.out.println("This vehicle has already been returned.");
+        return;
+      }
       while (delegate.fetchRental(returnModel.getRentID()) == null) {
         System.out.println("Rental not found. Enter new rentID or type \"no\" in case");
         returnModel.readRentID(bufferedReader);
