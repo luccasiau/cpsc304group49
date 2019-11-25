@@ -883,7 +883,6 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                                  "ORDER BY V.location, V.city"
                  );
          ps.setDate(1, curr); //set today date
-       System.out.println("[RentalReportPerVehicle]: done query");
          ResultSet rs = ps.executeQuery();
          if (rs.isBeforeFirst()) {
              while (rs.next()) { //for each row
@@ -920,7 +919,6 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                                  "GROUP BY V.location, V.city "
                  );
          ps.setDate(1, date); //set today date
-       System.out.println("[RentalReportbranch]: done query");
 
          ResultSet rs = ps.executeQuery();
          if (rs.isBeforeFirst()) {
@@ -961,7 +959,6 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                                  "WHERE R.startdate = ? "
                  );
          ps.setDate(1, date); //set today date
-       System.out.println("[RentalReportCompany]: done query");
 
        ResultSet rs = ps.executeQuery();
          if (rs.isBeforeFirst()) {
@@ -1002,7 +999,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                     .prepareStatement(
                             "SELECT V.vtname, count(*) " +
                                     "FROM Rent R, Vehicle V " +
-                                    "WHERE R.startdate = ? R.vlicense = V.vlicense AND V.location = ? AND V.city = ? " +
+                                    "WHERE R.startdate = ? AND R.vlicense = V.vlicense AND V.location = ? AND V.city = ? " +
                                     "GROUP BY V.vtname "
                     );
             ps.setDate(1, date);
@@ -1048,7 +1045,7 @@ public class DatabaseOperationHandler implements CommandLineUiDelegate {
                     .prepareStatement(
                             "SELECT count(*) " +
                                     "FROM Rent R, Vehicle V " +
-                                    "WHERE R.startdate = ? AND V.vlicense = R.vlicense and V.location = ? AND V.city = ? "
+                                    "WHERE R.startdate = ? AND V.vlicense = R.vlicense AND V.location = ? AND V.city = ? "
                     );
             ps.setDate(1, date); //set today date
             ps.setString(2, location);
